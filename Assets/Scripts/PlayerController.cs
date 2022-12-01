@@ -11,6 +11,9 @@ public class PlayerController : MonoBehaviour
     private Vector2 movementInput = Vector2.zero;
     private const float mouseSensitivityY = 360f;
 
+    private float pitch = 0f;
+    private const float maxPitch = 80f;
+
 
     private void Update()
     {
@@ -22,18 +25,15 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKey(KeyCode.A)) movementInput += Vector2.left;
         if (Input.GetKey(KeyCode.D)) movementInput += Vector2.right;
         movementInput.Normalize();
+        agentMovement.ApplyMovement(movementInput);
 
         rotationInput += Input.GetAxis("Mouse X") * Vector2.right;
         rotationInput += Input.GetAxis("Mouse Y") * Vector2.up;
 
-        agentMovement.ApplyRotation(rotationInput.x * Time.deltaTime);
-        camera.transform.Rotate(-rotationInput.y * mouseSensitivityY * Time.deltaTime, 0f, 0f, Space.Self);
+        agentMovement.ApplyRotation(rotationInput.x);
+        pitch = Mathf.Clamp(pitch - rotationInput.y * mouseSensitivityY * Time.deltaTime, -maxPitch, maxPitch);
+        camera.transform.localRotation = Quaternion.Euler(pitch, 0f, 0f);
 
         if (Input.GetKeyDown(KeyCode.E)) agentMovement.GrabBox();
-    }
-
-    private void FixedUpdate()
-    {
-        agentMovement.ApplyMovement(movementInput);
     }
 }

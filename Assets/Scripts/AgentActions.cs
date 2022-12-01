@@ -4,26 +4,48 @@ public class AgentActions : MonoBehaviour
 {
     [SerializeField] private new Rigidbody rigidbody = null;
     [SerializeField] private Rigidbody hands = null;
-    [SerializeField] private float movementForce = 1f;
+    [SerializeField] private float runSpeed = 1f;
+    [SerializeField] private float drag = 0.3f;
     [SerializeField] private float rotationSpeed = 360f;
     [SerializeField] private bool isHiding = true;
 
+    private Vector2 movementInput = Vector2.zero;
+    private float rotationInput = 0f;
     private GameObject grabbedBox;
     
     public bool IsHiding { get { return isHiding; } }
 
 
-    public void ApplyMovement(Vector2 directionLocal)
+    private void FixedUpdate()
     {
-        Vector3 force = directionLocal.x * transform.right + directionLocal.y * transform.forward;
-        force *= movementForce;
-        rigidbody.AddForce(force, ForceMode.Impulse);
+        Vector2 direction = movementInput.normalized;
+        Vector3 force = direction.x * transform.right + direction.y * transform.forward;
+        rigidbody.AddForce(force * runSpeed, ForceMode.Impulse);
+
+        Vector3 currentVel = new Vector3(rigidbody.velocity.x, Mathf.Max(0f, rigidbody.velocity.y), rigidbody.velocity.z);
+        Vector3 dragForce = -currentVel * drag;
+        rigidbody.AddForce(dragForce, ForceMode.Impulse);
+
+        movementInput = Vector2.zero;
+    }
+
+    private void Update()
+    {
+        float delta = rotationInput * rotationSpeed * Time.deltaTime;
+        rigidbody.MoveRotation(rigidbody.rotation * Quaternion.AngleAxis(delta, Vector3.up));
+
+        rotationInput = 0f;
+    }
+
+
+    public void ApplyMovement(Vector2 input)
+    {
+        movementInput += input * Time.deltaTime;
     }
 
     public void ApplyRotation(float delta)
     {
-        float normalizedDelta = delta * rotationSpeed;
-        rigidbody.MoveRotation(rigidbody.rotation * Quaternion.AngleAxis(normalizedDelta, Vector3.up));
+        rotationInput += delta;
     }
 
 
