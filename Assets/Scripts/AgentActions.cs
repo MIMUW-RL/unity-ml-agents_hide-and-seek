@@ -47,7 +47,7 @@ public class AgentActions : MonoBehaviour
             // Break in case the object is too far from holder
             if (Vector3.Distance(grabbedBox.Rigidbody.position, transform.position) > 8f)
             {
-                grabbedBox.Owner = null;
+                grabbedBox.Release();
                 grabbedBox = null;
             }
         }
@@ -85,7 +85,6 @@ public class AgentActions : MonoBehaviour
         rotationInput += delta;
     }
 
-
     public void GrabBox()
     {
         if (grabbedBox == null)
@@ -95,10 +94,9 @@ public class AgentActions : MonoBehaviour
                 if (hit.collider.CompareTag("Box"))
                 {
                     BoxHolding boxHolding = hit.collider.gameObject.GetComponent<BoxHolding>();
-                    if (boxHolding.Owner == null)
+                    if (boxHolding.TryGrab(this))
                     {
                         grabbedBox = boxHolding;
-                        grabbedBox.Owner = this;
                         // Keep rotation of the object relative to the agent
                         targetRelativeRotation = Quaternion.Inverse(transform.rotation) * grabbedBox.transform.rotation;
                     }
@@ -107,8 +105,20 @@ public class AgentActions : MonoBehaviour
         }
         else
         {
-            grabbedBox.Owner = null;
+            grabbedBox.Release();
             grabbedBox = null;
+        }
+    }
+
+    public void LockBox()
+    {
+        if (Physics.Raycast(new Ray(transform.position, transform.forward), out RaycastHit hit))
+        {
+            if (hit.collider.CompareTag("Box"))
+            {
+                BoxHolding boxHolding = hit.collider.gameObject.GetComponent<BoxHolding>();
+                boxHolding.TryLockUnlock(this);
+            }
         }
     }
 
