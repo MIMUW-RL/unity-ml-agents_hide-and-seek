@@ -1,10 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BoxHolding : MonoBehaviour
 {
     [SerializeField] private new Rigidbody rigidbody = null;
+
+    [SerializeField] private Material materialDefault = null;
+    [SerializeField] private Material materialLockHider = null;
+    [SerializeField] private Material materialLockSeeker = null;
+
+    private MeshRenderer meshRenderer = null;
 
     private AgentActions owner = null;
     private AgentActions lockOwner = null;
@@ -13,6 +17,13 @@ public class BoxHolding : MonoBehaviour
     public AgentActions Owner { get { return owner; } }
     public AgentActions LockOwner { get { return lockOwner; } }
     public Rigidbody Rigidbody { get { return rigidbody; } }
+
+
+    private void Start()
+    {
+        meshRenderer = GetComponent<MeshRenderer>();
+    }
+
 
     public bool TryGrab(AgentActions agent)
     {
@@ -33,21 +44,15 @@ public class BoxHolding : MonoBehaviour
     {
         if (lockOwner == null && owner == null)
         {
+            rigidbody.isKinematic = true;
             lockOwner = agent;
+            meshRenderer.material = agent.IsHiding ? materialLockHider : materialLockSeeker;
         }
         else if (lockOwner != null && lockOwner.IsHiding == agent.IsHiding)
         {
+            rigidbody.isKinematic = false;
             lockOwner = null;
-        }
-    }
-
-
-    private void OnDrawGizmos()
-    {
-        if (lockOwner != null)
-        {
-            // TODO: replace with some proper visual indicator
-            Gizmos.DrawMesh(GetComponent<MeshFilter>().mesh, transform.position + 0.02f * Vector3.down, transform.rotation, transform.localScale - Vector3.one * 0.1f);
+            meshRenderer.material = materialDefault;
         }
     }
 }

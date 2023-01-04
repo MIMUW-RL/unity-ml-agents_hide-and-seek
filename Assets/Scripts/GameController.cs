@@ -7,6 +7,7 @@ public class GameController : MonoBehaviour
     public static GameController Instance { get; private set; } = null;
 
     [SerializeField] private float gracePeriod = 10f;
+    [SerializeField] private float coneAngle = 0.375f * 180f;
 
     [SerializeField] private TMPro.TextMeshProUGUI textMeshReward = null;
 
@@ -55,6 +56,43 @@ public class GameController : MonoBehaviour
     }
 
 
+    public IEnumerable<AgentActions> GetHiders()
+    {
+        foreach (AgentActions agent in hiders)
+        {
+            yield return agent;
+        }
+    }
+
+    public IEnumerable<AgentActions> GetSeekers()
+    {
+        foreach (AgentActions agent in seekers)
+        {
+            yield return agent;
+        }
+    }
+
+    public bool AgentSeesAgent(AgentActions agent1, AgentActions agent2, out RaycastHit hit)
+    {
+        Vector3 direction = agent2.transform.position - agent1.transform.position;
+        if (Vector3.Angle(direction, agent1.transform.forward) > coneAngle)
+        {
+            hit = new RaycastHit();
+            return false;
+        }
+
+        Ray ray = new Ray(agent1.transform.position, direction);
+        if (Physics.Raycast(ray, out hit))
+        {
+            if (hit.collider.gameObject == agent2.gameObject)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     private bool AreAllHidersHidden()
     {
         bool retval = true;
@@ -62,15 +100,10 @@ public class GameController : MonoBehaviour
         {
             foreach (AgentActions hider in hiders)
             {
-                Vector3 direction = hider.transform.position - seeker.transform.position;
-                Ray ray = new Ray(seeker.transform.position, direction);
-                if (Physics.Raycast(ray, out RaycastHit hit))
+                if (AgentSeesAgent(seeker, hider, out RaycastHit hit))
                 {
-                    if (hit.collider.gameObject == hider.gameObject)
-                    {
-                        Debug.DrawLine(seeker.transform.position, hit.point, Color.red);
-                        retval = false;
-                    }
+                    Debug.DrawLine(seeker.transform.position, hit.point, Color.red);
+                    retval = false;
                 }
             }
         }
