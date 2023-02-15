@@ -14,8 +14,9 @@ public class GameController : MonoBehaviour
     private float graceTimer = 0f;
     private List<AgentActions> hiders;
     private List<AgentActions> seekers;
+    private List<BoxHolding> holdObjects;
 
-    public int hidersReward { get; private set; } = 0;
+    public int HidersReward { get; private set; } = 0;
     public bool GracePeriodEnded
     {
         get { return graceTimer <= 0f; }
@@ -41,18 +42,24 @@ public class GameController : MonoBehaviour
         graceTimer = gracePeriod;
         hiders = FindObjectsOfType<AgentActions>().Where((AgentActions a) => a.IsHiding).ToList();
         seekers = FindObjectsOfType<AgentActions>().Where((AgentActions a) => !a.IsHiding).ToList();
+        holdObjects = FindObjectsOfType<BoxHolding>().ToList();
     }
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            ResetScene();
+        }
+
         if (graceTimer > 0f)
         {
             graceTimer -= Time.deltaTime;
             return;
         }
 
-        hidersReward = AreAllHidersHidden() ? 1 : -1;
-        textMeshReward.text = "Hiders reward: " + hidersReward;
+        HidersReward = AreAllHidersHidden() ? 1 : -1;
+        textMeshReward.text = "Hiders reward: " + HidersReward;
     }
 
 
@@ -90,6 +97,24 @@ public class GameController : MonoBehaviour
             }
         }
         return false;
+    }
+
+
+    public void ResetScene()
+    {
+        graceTimer = gracePeriod;
+        foreach (AgentActions agent in hiders)
+        {
+            agent.ResetAgent();
+        }
+        foreach (AgentActions agent in seekers)
+        {
+            agent.ResetAgent();
+        }
+        foreach (BoxHolding holdObject in holdObjects)
+        {
+            holdObject.Reset();
+        }
     }
 
 

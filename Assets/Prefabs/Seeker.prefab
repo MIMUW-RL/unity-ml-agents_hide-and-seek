@@ -80,7 +80,12 @@ PrefabInstance:
     - target: {fileID: 4598261876671290341, guid: 379df8dd3bebf214eabff792cb18b0d2,
         type: 3}
       propertyPath: m_TagString
-      value: Untagged
+      value: Seeker
+      objectReference: {fileID: 0}
+    - target: {fileID: 6612431404260404718, guid: 379df8dd3bebf214eabff792cb18b0d2,
+        type: 3}
+      propertyPath: TeamId
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 379df8dd3bebf214eabff792cb18b0d2, type: 3}

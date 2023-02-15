@@ -135,6 +135,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6185040975040833981, guid: 85d21b20d4f48554095ff53b009847d1,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 8444921609139218828, guid: 85d21b20d4f48554095ff53b009847d1,
         type: 3}
       propertyPath: m_RootOrder
@@ -195,7 +200,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: Seeker (Player Controller)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8663937685560225657, guid: 85d21b20d4f48554095ff53b009847d1, type: 3}
+    - {fileID: 1235744375307362182, guid: 85d21b20d4f48554095ff53b009847d1, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 85d21b20d4f48554095ff53b009847d1, type: 3}
 --- !u!1 &338861495349073466 stripped
 GameObject:

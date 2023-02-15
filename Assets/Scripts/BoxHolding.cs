@@ -13,6 +13,9 @@ public class BoxHolding : MonoBehaviour
     private AgentActions owner = null;
     private AgentActions lockOwner = null;
 
+    private Vector3 startPosition;
+    private Quaternion startRotation;
+
 
     public AgentActions Owner { get { return owner; } }
     public AgentActions LockOwner { get { return lockOwner; } }
@@ -22,6 +25,8 @@ public class BoxHolding : MonoBehaviour
     private void Start()
     {
         meshRenderer = GetComponent<MeshRenderer>();
+        startPosition = transform.position;
+        startRotation = transform.rotation;
     }
 
 
@@ -54,5 +59,16 @@ public class BoxHolding : MonoBehaviour
             lockOwner = null;
             meshRenderer.material = materialDefault;
         }
+    }
+
+
+    public void Reset()
+    {
+        owner = null;
+        lockOwner = null;
+        rigidbody.isKinematic = false;
+        meshRenderer.material = materialDefault;
+        transform.position = startPosition;
+        transform.rotation = startRotation;
     }
 }

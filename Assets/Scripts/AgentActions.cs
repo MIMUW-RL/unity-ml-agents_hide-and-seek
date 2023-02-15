@@ -8,14 +8,25 @@ public class AgentActions : MonoBehaviour
     [SerializeField] private float rotationSpeed = 360f;
     [SerializeField] private bool isHiding = true;
 
+    private Vector3 startPosition;
+    private Quaternion startRotation;
+
     private Vector2 movementInput = Vector2.zero;
     private float rotationInput = 0f;
 
     private BoxHolding grabbedBox;
     private Quaternion targetRelativeRotation;
 
+    public Rigidbody Rigidbody { get { return rigidbody; } }
+    
     public bool IsHiding { get { return isHiding; } }
 
+
+    private void Start()
+    {
+        startPosition = transform.position;
+        startRotation = transform.rotation;
+    }
 
     private void FixedUpdate()
     {
@@ -91,7 +102,7 @@ public class AgentActions : MonoBehaviour
         {
             if (Physics.Raycast(new Ray(transform.position, transform.forward), out RaycastHit hit))
             {
-                if (hit.collider.CompareTag("Box"))
+                if (hit.collider.CompareTag("Box") || hit.collider.CompareTag("Ramp"))
                 {
                     BoxHolding boxHolding = hit.collider.gameObject.GetComponent<BoxHolding>();
                     if (boxHolding.TryGrab(this))
@@ -114,12 +125,20 @@ public class AgentActions : MonoBehaviour
     {
         if (Physics.Raycast(new Ray(transform.position, transform.forward), out RaycastHit hit))
         {
-            if (hit.collider.CompareTag("Box"))
+            if (hit.collider.CompareTag("Box") || hit.collider.CompareTag("Ramp"))
             {
                 BoxHolding boxHolding = hit.collider.gameObject.GetComponent<BoxHolding>();
                 boxHolding.TryLockUnlock(this);
             }
         }
+    }
+
+
+    public void ResetAgent()
+    {
+        transform.position = startPosition;
+        transform.rotation = startRotation;
+        grabbedBox = null;
     }
 
 
