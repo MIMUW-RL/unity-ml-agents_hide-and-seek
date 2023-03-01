@@ -25,7 +25,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKey(KeyCode.A)) movementInput += Vector2.left;
         if (Input.GetKey(KeyCode.D)) movementInput += Vector2.right;
         movementInput.Normalize();
-        agentMovement.ApplyMovement(movementInput);
+        agentMovement.ApplyMovement(movementInput * Time.deltaTime);
 
         rotationInput += Input.GetAxis("Mouse X") * Vector2.right;
         rotationInput += Input.GetAxis("Mouse Y") * Vector2.up;

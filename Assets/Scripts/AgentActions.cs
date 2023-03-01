@@ -42,6 +42,10 @@ public class AgentActions : MonoBehaviour
 
         movementInput = Vector2.zero;
 
+        float delta = rotationInput * rotationSpeed * Time.fixedDeltaTime;
+        rigidbody.MoveRotation(rigidbody.rotation * Quaternion.AngleAxis(delta, Vector3.up));
+        rotationInput = 0f;
+
         // Adjust grabbed object position / rotation
         if (grabbedBox != null)
         {
@@ -64,14 +68,6 @@ public class AgentActions : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        float delta = rotationInput * rotationSpeed * Time.deltaTime;
-        rigidbody.MoveRotation(rigidbody.rotation * Quaternion.AngleAxis(delta, Vector3.up));
-
-        rotationInput = 0f;
-    }
-
 
     // Shortest path rotation from one quaternion to another, returned as euler angles
     private Vector3 ShortestPathFromTo(Quaternion from, Quaternion to)
@@ -88,7 +84,7 @@ public class AgentActions : MonoBehaviour
 
     public void ApplyMovement(Vector2 input)
     {
-        movementInput += input * Time.deltaTime;
+        movementInput += input;
     }
 
     public void ApplyRotation(float delta)

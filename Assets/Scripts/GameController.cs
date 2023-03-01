@@ -1,25 +1,29 @@
 using System.Collections.Generic;
 using System.Linq;
+using Unity.MLAgents;
 using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
     public static GameController Instance { get; private set; } = null;
 
-    [SerializeField] private float gracePeriod = 10f;
+    [SerializeField] private int episodeSteps = 2000;
+    [SerializeField] private float gracePeriodFraction = 0.4f;
     [SerializeField] private float coneAngle = 0.375f * 180f;
 
     [SerializeField] private TMPro.TextMeshProUGUI textMeshReward = null;
 
-    private float graceTimer = 0f;
+    private int episodeTimer = 0;
     private List<AgentActions> hiders;
     private List<AgentActions> seekers;
+    private SimpleMultiAgentGroup hidersGroup;
+    private SimpleMultiAgentGroup seekersGroup;
     private List<BoxHolding> holdObjects;
 
     public int HidersReward { get; private set; } = 0;
     public bool GracePeriodEnded
     {
-        get { return graceTimer <= 0f; }
+        get { return episodeTimer >= episodeSteps * gracePeriodFraction; }
     }
 
 
@@ -39,10 +43,21 @@ public class GameController : MonoBehaviour
 
     private void Start()
     {
-        graceTimer = gracePeriod;
         hiders = FindObjectsOfType<AgentActions>().Where((AgentActions a) => a.IsHiding).ToList();
         seekers = FindObjectsOfType<AgentActions>().Where((AgentActions a) => !a.IsHiding).ToList();
         holdObjects = FindObjectsOfType<BoxHolding>().ToList();
+
+        hidersGroup = new SimpleMultiAgentGroup();
+        foreach (AgentActions hider in hiders)
+        {
+            hidersGroup.RegisterAgent(hider.GetComponent<HideAndSeekAgent>());
+        }
+
+        seekersGroup = new SimpleMultiAgentGroup();
+        foreach (AgentActions seeker in seekers)
+        {
+            seekersGroup.RegisterAgent(seeker.GetComponent<HideAndSeekAgent>());
+        }
     }
 
     private void Update()
@@ -52,14 +67,33 @@ public class GameController : MonoBehaviour
             ResetScene();
         }
 
-        if (graceTimer > 0f)
+        if (GracePeriodEnded)
         {
-            graceTimer -= Time.deltaTime;
-            return;
+            HidersReward = AreAllHidersHidden() ? 1 : -1;
+            textMeshReward.text = "Hiders reward: " + HidersReward;
         }
+        else
+        {
+            HidersReward = 0;
+            textMeshReward.text = "Grace period";
+        }
+    }
 
-        HidersReward = AreAllHidersHidden() ? 1 : -1;
-        textMeshReward.text = "Hiders reward: " + HidersReward;
+    private void FixedUpdate()
+    {
+        episodeTimer++;
+
+        if (episodeTimer >= episodeSteps)
+        {
+            hidersGroup.EndGroupEpisode();
+            seekersGroup.EndGroupEpisode();
+            ResetScene();
+        }
+        else if (GracePeriodEnded)
+        {
+            hidersGroup.AddGroupReward(HidersReward);
+            seekersGroup.AddGroupReward(-HidersReward);
+        }
     }
 
 
@@ -102,7 +136,7 @@ public class GameController : MonoBehaviour
 
     public void ResetScene()
     {
-        graceTimer = gracePeriod;
+        episodeTimer = 0;
         foreach (AgentActions agent in hiders)
         {
             agent.ResetAgent();
