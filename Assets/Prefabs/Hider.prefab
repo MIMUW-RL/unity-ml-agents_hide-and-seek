@@ -52,7 +52,7 @@ MonoBehaviour:
   - Seeker
   m_RaysPerDirection: 10
   m_MaxRayDegrees: 67.5
-  m_SphereCastRadius: 0.5
+  m_SphereCastRadius: 0.4
   m_RayLength: 20
   m_RayLayerMask:
     serializedVersion: 2
@@ -200,6 +200,7 @@ MonoBehaviour:
   runSpeed: 5
   drag: 0.3
   rotationSpeed: 360
+  grabDistance: 2
   isHiding: 1
 --- !u!114 &3665455993830645009
 MonoBehaviour:
@@ -274,7 +275,6 @@ GameObject:
   - component: {fileID: 6575139619947613577}
   - component: {fileID: 3450497884753711903}
   - component: {fileID: 5320557500802713901}
-  - component: {fileID: 4086680293092692401}
   m_Layer: 2
   m_Name: Eye R
   m_TagString: Untagged
@@ -347,19 +347,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &4086680293092692401
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5158701073927935943}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7746263233317127159
 GameObject:
   m_ObjectHideFlags: 0
@@ -371,7 +358,6 @@ GameObject:
   - component: {fileID: 4564608339119674578}
   - component: {fileID: 5323460630315454221}
   - component: {fileID: 9214392137552602878}
-  - component: {fileID: 1084458142611124388}
   m_Layer: 2
   m_Name: Eye L
   m_TagString: Untagged
@@ -444,16 +430,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &1084458142611124388
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7746263233317127159}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}

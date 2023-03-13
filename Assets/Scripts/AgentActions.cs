@@ -6,6 +6,7 @@ public class AgentActions : MonoBehaviour
     [SerializeField] private float runSpeed = 1f;
     [SerializeField] private float drag = 0.3f;
     [SerializeField] private float rotationSpeed = 360f;
+    [SerializeField] private float grabDistance = 2f;
     [SerializeField] private bool isHiding = true;
 
     private Vector3 startPosition;
@@ -21,6 +22,8 @@ public class AgentActions : MonoBehaviour
     
     public bool IsHiding { get { return isHiding; } }
 
+    public bool IsHolding { get { return grabbedBox != null; } }
+
 
     private void Start()
     {
@@ -29,6 +32,17 @@ public class AgentActions : MonoBehaviour
     }
 
     private void FixedUpdate()
+    {
+        if (isHiding || GameController.Instance.GracePeriodEnded)
+        {
+            Movement();
+        }
+
+        movementInput = Vector2.zero;
+        rotationInput = 0f;
+    }
+
+    private void Movement()
     {
         // Apply movement
         Vector2 direction = movementInput.normalized;
@@ -40,11 +54,8 @@ public class AgentActions : MonoBehaviour
         Vector3 dragForce = -currentVel * drag;
         rigidbody.AddForce(dragForce, ForceMode.Impulse);
 
-        movementInput = Vector2.zero;
-
         float delta = rotationInput * rotationSpeed * Time.fixedDeltaTime;
         rigidbody.MoveRotation(rigidbody.rotation * Quaternion.AngleAxis(delta, Vector3.up));
-        rotationInput = 0f;
 
         // Adjust grabbed object position / rotation
         if (grabbedBox != null)
@@ -98,7 +109,7 @@ public class AgentActions : MonoBehaviour
         {
             if (Physics.Raycast(new Ray(transform.position, transform.forward), out RaycastHit hit))
             {
-                if (hit.collider.CompareTag("Box") || hit.collider.CompareTag("Ramp"))
+                if (hit.distance < grabDistance && (hit.collider.CompareTag("Box") || hit.collider.CompareTag("Ramp")))
                 {
                     BoxHolding boxHolding = hit.collider.gameObject.GetComponent<BoxHolding>();
                     if (boxHolding.TryGrab(this))
@@ -110,7 +121,11 @@ public class AgentActions : MonoBehaviour
                 }
             }
         }
-        else
+    }
+
+    public void ReleaseBox()
+    {
+        if (grabbedBox != null)
         {
             grabbedBox.Release();
             grabbedBox = null;
@@ -121,7 +136,7 @@ public class AgentActions : MonoBehaviour
     {
         if (Physics.Raycast(new Ray(transform.position, transform.forward), out RaycastHit hit))
         {
-            if (hit.collider.CompareTag("Box") || hit.collider.CompareTag("Ramp"))
+            if (hit.distance < grabDistance && (hit.collider.CompareTag("Box") || hit.collider.CompareTag("Ramp")))
             {
                 BoxHolding boxHolding = hit.collider.gameObject.GetComponent<BoxHolding>();
                 boxHolding.TryLockUnlock(this);
@@ -134,6 +149,8 @@ public class AgentActions : MonoBehaviour
     {
         transform.position = startPosition;
         transform.rotation = startRotation;
+        rigidbody.velocity = Vector3.zero;
+        rigidbody.angularVelocity = Vector3.zero;
         grabbedBox = null;
     }
 

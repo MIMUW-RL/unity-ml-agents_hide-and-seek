@@ -29,7 +29,12 @@ public class HideAndSeekAgent : Agent
         {
             agentActions.GrabBox();
         }
-        else if (actions.DiscreteActions[1] == 1)
+        else if (agentActions.IsHolding)
+        {
+            agentActions.ReleaseBox();
+        }
+
+        if (actions.DiscreteActions[1] == 1)
         {
             agentActions.LockBox();
         }

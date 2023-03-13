@@ -35,6 +35,12 @@ public class PlayerController : MonoBehaviour
         camera.transform.localRotation = Quaternion.Euler(pitch, 0f, 0f);
 
         if (Input.GetKeyDown(KeyCode.E)) agentMovement.GrabBox();
+
+        if (!Input.GetKey(KeyCode.E) && agentMovement.IsHolding)
+        {
+            agentMovement.ReleaseBox();
+        }
+        
         if (Input.GetKeyDown(KeyCode.L)) agentMovement.LockBox();
     }
 }

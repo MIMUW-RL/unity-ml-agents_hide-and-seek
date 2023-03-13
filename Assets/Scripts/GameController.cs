@@ -7,7 +7,7 @@ public class GameController : MonoBehaviour
 {
     public static GameController Instance { get; private set; } = null;
 
-    [SerializeField] private int episodeSteps = 2000;
+    [SerializeField] private int episodeSteps = 240;
     [SerializeField] private float gracePeriodFraction = 0.4f;
     [SerializeField] private float coneAngle = 0.375f * 180f;
 
