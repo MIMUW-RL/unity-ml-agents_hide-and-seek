@@ -1495,7 +1495,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a32a0ec2c48689740a2c80139f2865b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  episodeSteps: 240
+  episodeSteps: 500
   gracePeriodFraction: 0.4
   coneAngle: 67.5
   textMeshReward: {fileID: 1526039477}

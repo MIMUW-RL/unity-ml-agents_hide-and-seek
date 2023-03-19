@@ -7,6 +7,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 528633514186532188, guid: 379df8dd3bebf214eabff792cb18b0d2,
+        type: 3}
+      propertyPath: m_RayLayerMask.m_Bits
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4598261876671290336, guid: 379df8dd3bebf214eabff792cb18b0d2,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -86,6 +91,11 @@ PrefabInstance:
         type: 3}
       propertyPath: TeamId
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7142035614772534038, guid: 379df8dd3bebf214eabff792cb18b0d2,
+        type: 3}
+      propertyPath: m_RayLayerMask.m_Bits
+      value: 51
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 379df8dd3bebf214eabff792cb18b0d2, type: 3}
