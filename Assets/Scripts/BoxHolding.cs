@@ -8,6 +8,10 @@ public class BoxHolding : MonoBehaviour
     [SerializeField] private Material materialLockHider = null;
     [SerializeField] private Material materialLockSeeker = null;
 
+    [SerializeField] private string tagDefault = "";
+    [SerializeField] private string tagLockHider = "";
+    [SerializeField] private string tagLockSeeker = "";
+
     private MeshRenderer meshRenderer = null;
 
     private AgentActions owner = null;
@@ -52,12 +56,14 @@ public class BoxHolding : MonoBehaviour
             rigidbody.isKinematic = true;
             lockOwner = agent;
             meshRenderer.material = agent.IsHiding ? materialLockHider : materialLockSeeker;
+            tag = agent.IsHiding ? tagLockHider : tagLockSeeker;
         }
         else if (lockOwner != null && lockOwner.IsHiding == agent.IsHiding)
         {
             rigidbody.isKinematic = false;
             lockOwner = null;
             meshRenderer.material = materialDefault;
+            tag = tagDefault;
         }
     }
 
@@ -66,6 +72,7 @@ public class BoxHolding : MonoBehaviour
     {
         owner = null;
         lockOwner = null;
+        tag = tagDefault;
         rigidbody.isKinematic = false;
         meshRenderer.material = materialDefault;
         transform.position = startPosition;

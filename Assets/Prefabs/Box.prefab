@@ -131,3 +131,6 @@ MonoBehaviour:
   materialDefault: {fileID: 2100000, guid: c04371d0eb03d914bada2cd651a47c9b, type: 2}
   materialLockHider: {fileID: 2100000, guid: 39a3d6d06f28f6d40bf55b63ca511cbc, type: 2}
   materialLockSeeker: {fileID: 2100000, guid: 28e4f356952ba1149a4dcaf1759869d8, type: 2}
+  tagDefault: Box
+  tagLockHider: Box Hider Lock
+  tagLockSeeker: Box Seeker Lock

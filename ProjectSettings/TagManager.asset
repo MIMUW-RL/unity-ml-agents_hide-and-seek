@@ -8,6 +8,10 @@ TagManager:
   - Hider
   - Seeker
   - Ramp
+  - Box Hider Lock
+  - Box Seeker Lock
+  - Ramp Hider Lock
+  - Ramp Seeker Lock
   layers:
   - Default
   - TransparentFX

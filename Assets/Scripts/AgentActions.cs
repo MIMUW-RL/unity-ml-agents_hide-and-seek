@@ -109,7 +109,7 @@ public class AgentActions : MonoBehaviour
         {
             if (Physics.Raycast(new Ray(transform.position, transform.forward), out RaycastHit hit))
             {
-                if (hit.distance < grabDistance && (hit.collider.CompareTag("Box") || hit.collider.CompareTag("Ramp")))
+                if (hit.distance < grabDistance && IsMovable(hit.collider))
                 {
                     BoxHolding boxHolding = hit.collider.gameObject.GetComponent<BoxHolding>();
                     if (boxHolding.TryGrab(this))
@@ -136,7 +136,7 @@ public class AgentActions : MonoBehaviour
     {
         if (Physics.Raycast(new Ray(transform.position, transform.forward), out RaycastHit hit))
         {
-            if (hit.distance < grabDistance && (hit.collider.CompareTag("Box") || hit.collider.CompareTag("Ramp")))
+            if (hit.distance < grabDistance && IsMovable(hit.collider))
             {
                 BoxHolding boxHolding = hit.collider.gameObject.GetComponent<BoxHolding>();
                 boxHolding.TryLockUnlock(this);
@@ -154,6 +154,13 @@ public class AgentActions : MonoBehaviour
         grabbedBox = null;
     }
 
+
+
+    private bool IsMovable(Collider collider)
+    {
+        return collider.CompareTag("Box") || collider.CompareTag("Box Hider Lock") || collider.CompareTag("Box Seeker Lock") ||
+               collider.CompareTag("Ramp") || collider.CompareTag("Ramp Hider Lock") || collider.CompareTag("Ramp Seeker Lock");
+    }
 
 
     private void OnDrawGizmos()

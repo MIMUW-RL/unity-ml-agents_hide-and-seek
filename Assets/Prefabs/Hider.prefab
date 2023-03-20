@@ -46,10 +46,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_SensorName: RayPerceptionSensorHider
   m_DetectableTags:
-  - Box
-  - Ramp
   - Hider
   - Seeker
+  - Box
+  - Box Hider Lock
+  - Box Seeker Lock
+  - Ramp
+  - Ramp Hider Lock
+  - Ramp Seeker Lock
   m_RaysPerDirection: 10
   m_MaxRayDegrees: 67.5
   m_SphereCastRadius: 0.4
@@ -62,6 +66,53 @@ MonoBehaviour:
   rayMissColor: {r: 1, g: 1, b: 1, a: 1}
   m_StartVerticalOffset: 0
   m_EndVerticalOffset: 0
+--- !u!1 &1984399037170187127
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4968970397759583599}
+  - component: {fileID: 9026272798846000910}
+  m_Layer: 0
+  m_Name: Team Buffer Sensor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4968970397759583599
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1984399037170187127}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4598261876671290340}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9026272798846000910
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1984399037170187127}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd8012d5925524537b27131fef517017, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SensorName: BufferSensor
+  m_ObservableSize: 7
+  m_MaxNumObservables: 3
 --- !u!1 &4598261876671290341
 GameObject:
   m_ObjectHideFlags: 0
@@ -102,6 +153,7 @@ Transform:
   - {fileID: 6575139619947613577}
   - {fileID: 2249407665304148949}
   - {fileID: 7074422500183827}
+  - {fileID: 4968970397759583599}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -220,6 +272,7 @@ MonoBehaviour:
   hasUpgradedFromAgentParameters: 1
   MaxStep: 2000
   agentActions: {fileID: 4598261876671290339}
+  teamBufferSensor: {fileID: 9026272798846000910}
 --- !u!114 &6612431404260404718
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -477,10 +530,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_SensorName: RayPerceptionSensorSeeker
   m_DetectableTags:
-  - Box
-  - Ramp
   - Hider
   - Seeker
+  - Box
+  - Box Hider Lock
+  - Box Seeker Lock
+  - Ramp
+  - Ramp Hider Lock
+  - Ramp Seeker Lock
   m_RaysPerDirection: 10
   m_MaxRayDegrees: 67.5
   m_SphereCastRadius: 0.4
