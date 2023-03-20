@@ -7,6 +7,7 @@ public class AgentActions : MonoBehaviour
     [SerializeField] private float drag = 0.3f;
     [SerializeField] private float rotationSpeed = 360f;
     [SerializeField] private float grabDistance = 2f;
+    [SerializeField] private float holdBreakDistance = 4f;
     [SerializeField] private bool isHiding = true;
 
     private Vector3 startPosition;
@@ -61,7 +62,7 @@ public class AgentActions : MonoBehaviour
         if (grabbedBox != null)
         {
             // Adjust position
-            Vector3 targetPosition = transform.position + transform.forward * 5f;
+            Vector3 targetPosition = transform.position + transform.forward * grabDistance;
             Vector3 towards = targetPosition - grabbedBox.Rigidbody.position;
             grabbedBox.Rigidbody.velocity = towards * 10f;
 
@@ -71,7 +72,7 @@ public class AgentActions : MonoBehaviour
             grabbedBox.Rigidbody.angularVelocity = angularTowards * 0.1f;
 
             // Break in case the object is too far from holder
-            if (Vector3.Distance(grabbedBox.Rigidbody.position, transform.position) > 8f)
+            if (Vector3.Distance(grabbedBox.Rigidbody.position, transform.position) > holdBreakDistance)
             {
                 grabbedBox.Release();
                 grabbedBox = null;
