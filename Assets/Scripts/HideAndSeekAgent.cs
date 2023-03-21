@@ -59,7 +59,11 @@ public class HideAndSeekAgent : Agent
 
         if (actions.DiscreteActions[1] == 1)
         {
-            agentActions.LockBox();
+            agentActions.LockBox(true);
+        }
+        else if (actions.DiscreteActions[1] == 2)
+        {
+            agentActions.LockBox(false);
         }
 
         //AddReward(GameController.Instance.HidersReward * (agentActions.IsHiding ? 1 : -1));

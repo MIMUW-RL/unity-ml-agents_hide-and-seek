@@ -254,6 +254,7 @@ MonoBehaviour:
   drag: 0.3
   rotationSpeed: 360
   grabDistance: 2
+  holdBreakDistance: 4
   isHiding: 1
 --- !u!114 &3665455993830645009
 MonoBehaviour:
@@ -290,7 +291,7 @@ MonoBehaviour:
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 3
-      BranchSizes: 0200000002000000
+      BranchSizes: 0200000003000000
     VectorActionSize: 
     VectorActionDescriptions: []
     VectorActionSpaceType: 0

@@ -49,21 +49,27 @@ public class BoxHolding : MonoBehaviour
         owner = null;
     }
 
-    public void TryLockUnlock(AgentActions agent)
+    public void TryLockUnlock(AgentActions agent, bool tryLock)
     {
-        if (lockOwner == null && owner == null)
+        if (tryLock)
         {
-            rigidbody.isKinematic = true;
-            lockOwner = agent;
-            meshRenderer.material = agent.IsHiding ? materialLockHider : materialLockSeeker;
-            tag = agent.IsHiding ? tagLockHider : tagLockSeeker;
+            if (lockOwner == null && owner == null)
+            {
+                rigidbody.isKinematic = true;
+                lockOwner = agent;
+                meshRenderer.material = agent.IsHiding ? materialLockHider : materialLockSeeker;
+                tag = agent.IsHiding ? tagLockHider : tagLockSeeker;
+            }
         }
-        else if (lockOwner != null && lockOwner.IsHiding == agent.IsHiding)
+        else
         {
-            rigidbody.isKinematic = false;
-            lockOwner = null;
-            meshRenderer.material = materialDefault;
-            tag = tagDefault;
+            if (lockOwner != null && lockOwner.IsHiding == agent.IsHiding)
+            {
+                rigidbody.isKinematic = false;
+                lockOwner = null;
+                meshRenderer.material = materialDefault;
+                tag = tagDefault;
+            }
         }
     }
 

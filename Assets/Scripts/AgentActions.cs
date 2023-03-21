@@ -133,14 +133,14 @@ public class AgentActions : MonoBehaviour
         }
     }
 
-    public void LockBox()
+    public void LockBox(bool tryLock)
     {
         if (Physics.Raycast(new Ray(transform.position, transform.forward), out RaycastHit hit))
         {
             if (hit.distance < grabDistance && IsMovable(hit.collider))
             {
                 BoxHolding boxHolding = hit.collider.gameObject.GetComponent<BoxHolding>();
-                boxHolding.TryLockUnlock(this);
+                boxHolding.TryLockUnlock(this, tryLock);
             }
         }
     }

@@ -40,7 +40,8 @@ public class PlayerController : MonoBehaviour
         {
             agentMovement.ReleaseBox();
         }
-        
-        if (Input.GetKeyDown(KeyCode.L)) agentMovement.LockBox();
+
+        if (Input.GetKeyDown(KeyCode.L)) agentMovement.LockBox(true);
+        if (Input.GetKeyDown(KeyCode.U)) agentMovement.LockBox(false);
     }
 }
