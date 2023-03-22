@@ -11,6 +11,8 @@ public class GameController : MonoBehaviour
     [SerializeField] private float gracePeriodFraction = 0.4f;
     [SerializeField] private float coneAngle = 0.375f * 180f;
 
+    [SerializeField] private MapGenerator mapGenerator = null;
+
     [SerializeField] private TMPro.TextMeshProUGUI textMeshReward = null;
 
     private int episodeTimer = 0;
@@ -58,6 +60,8 @@ public class GameController : MonoBehaviour
         {
             seekersGroup.RegisterAgent(seeker.GetComponent<HideAndSeekAgent>());
         }
+
+        mapGenerator?.Generate();
     }
 
     private void Update()
@@ -149,6 +153,8 @@ public class GameController : MonoBehaviour
         {
             holdObject.Reset();
         }
+
+        mapGenerator?.Generate();
     }
 
 
