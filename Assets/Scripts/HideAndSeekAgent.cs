@@ -66,7 +66,10 @@ public class HideAndSeekAgent : Agent
             agentActions.LockBox(false);
         }
 
-        //AddReward(GameController.Instance.HidersReward * (agentActions.IsHiding ? 1 : -1));
+        if (!GameController.Instance.UseGroupReward)
+        {
+            AddReward(GameController.Instance.HidersReward * (agentActions.IsHiding ? 1 : -1));
+        }
     }
 
     public override void Heuristic(in ActionBuffers actionsOut)

@@ -10,6 +10,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private int episodeSteps = 240;
     [SerializeField] private float gracePeriodFraction = 0.4f;
     [SerializeField] private float coneAngle = 0.375f * 180f;
+    [SerializeField] private bool useGroupReward = true;
 
     [SerializeField] private MapGenerator mapGenerator = null;
 
@@ -23,6 +24,7 @@ public class GameController : MonoBehaviour
     private List<BoxHolding> holdObjects;
 
     public int HidersReward { get; private set; } = 0;
+    public bool UseGroupReward => useGroupReward;
     public bool GracePeriodEnded
     {
         get { return episodeTimer >= episodeSteps * gracePeriodFraction; }
@@ -95,8 +97,11 @@ public class GameController : MonoBehaviour
         }
         else if (GracePeriodEnded)
         {
-            hidersGroup.AddGroupReward(HidersReward);
-            seekersGroup.AddGroupReward(-HidersReward);
+            if (useGroupReward)
+            {
+                hidersGroup.AddGroupReward(HidersReward);
+                seekersGroup.AddGroupReward(-HidersReward);
+            }
         }
     }
 
