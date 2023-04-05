@@ -1200,7 +1200,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1001428919}
   m_LocalRotation: {x: -0, y: -1, z: -0, w: 0.0000029504295}
-  m_LocalPosition: {x: 1.25, y: 1, z: 0}
+  m_LocalPosition: {x: 1.375, y: 1, z: -0.25}
   m_LocalScale: {x: 2, y: 2, z: 0.25}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1498,6 +1498,8 @@ MonoBehaviour:
   episodeSteps: 500
   gracePeriodFraction: 0.4
   coneAngle: 67.5
+  useGroupReward: 1
+  mapGenerator: {fileID: 0}
   textMeshReward: {fileID: 1526039477}
 --- !u!4 &1272179866 stripped
 Transform:
@@ -2010,7 +2012,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1900729255}
   m_LocalRotation: {x: -0, y: -0.70710576, z: -0, w: 0.7071079}
-  m_LocalPosition: {x: 0.25, y: 1, z: -1}
+  m_LocalPosition: {x: 0.25, y: 1, z: -1.125}
   m_LocalScale: {x: 2, y: 2, z: 0.25}
   m_ConstrainProportionsScale: 0
   m_Children: []
