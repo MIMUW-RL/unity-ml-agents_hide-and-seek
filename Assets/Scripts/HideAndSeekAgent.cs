@@ -8,6 +8,9 @@ public class HideAndSeekAgent : Agent
 {
     [SerializeField] private AgentActions agentActions = null;
     [SerializeField] private BufferSensorComponent teamBufferSensor = null;
+    [SerializeField] private VectorSensorComponent dummyRaycastSensor = null;
+
+    private const int raycastSensorSize = 210;
 
     public override void CollectObservations(VectorSensor sensor)
     {
@@ -36,6 +39,12 @@ public class HideAndSeekAgent : Agent
 
                 teamBufferSensor.AppendObservation(obs);
             }
+        }
+
+        if (dummyRaycastSensor != null)
+        {
+            float[] dummyObs = new float[raycastSensorSize];
+            dummyRaycastSensor.GetSensor().AddObservation(dummyObs);
         }
     }
 

@@ -9,8 +9,18 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 528633514186532188, guid: 379df8dd3bebf214eabff792cb18b0d2,
         type: 3}
-      propertyPath: m_RayLayerMask.m_Bits
-      value: 0
+      propertyPath: m_SensorName
+      value: RayPerceptionSensorSeeker
+      objectReference: {fileID: 0}
+    - target: {fileID: 1700417498865422318, guid: 379df8dd3bebf214eabff792cb18b0d2,
+        type: 3}
+      propertyPath: m_Name
+      value: Raycast Sensor (Seeker)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4183319885125584200, guid: 379df8dd3bebf214eabff792cb18b0d2,
+        type: 3}
+      propertyPath: m_SensorName
+      value: RayPerceptionSensorHider
       objectReference: {fileID: 0}
     - target: {fileID: 4598261876671290336, guid: 379df8dd3bebf214eabff792cb18b0d2,
         type: 3}
@@ -92,10 +102,20 @@ PrefabInstance:
       propertyPath: TeamId
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6682294051711577537, guid: 379df8dd3bebf214eabff792cb18b0d2,
+        type: 3}
+      propertyPath: m_SensorName
+      value: RayPerceptionSensorHider
+      objectReference: {fileID: 0}
     - target: {fileID: 7142035614772534038, guid: 379df8dd3bebf214eabff792cb18b0d2,
         type: 3}
       propertyPath: m_RayLayerMask.m_Bits
       value: 51
+      objectReference: {fileID: 0}
+    - target: {fileID: 8815845169450279185, guid: 379df8dd3bebf214eabff792cb18b0d2,
+        type: 3}
+      propertyPath: m_Name
+      value: Raycast Sensor (Hider)
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 379df8dd3bebf214eabff792cb18b0d2, type: 3}
