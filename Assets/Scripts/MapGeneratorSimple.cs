@@ -14,22 +14,29 @@ public class MapGeneratorSimple : MapGenerator
 
     [SerializeField] private AgentActions[] hiders = null;
     [SerializeField] private AgentActions[] seekers = null;
-    [SerializeField] private BoxHolding[] movables = null;
 
     [SerializeField] private Transform wallsParent = null;
     [SerializeField] private GameObject wallPrefab = null;
+    [SerializeField] private BoxHolding boxPrefab = null;
+    [SerializeField] private int numBoxesMin = 2;
+    [SerializeField] private int numBoxesMax = 4;
+    [SerializeField] private float boxY = 1f;
 
     private const int ntries = 20;
 
     private List<GameObject> generatedWalls = null;
+    private List<GameObject> generatedBoxes = null;
 
     public override void Generate()
     {
         generatedWalls?.ForEach((GameObject wall) => Destroy(wall));
         generatedWalls = new List<GameObject>();
 
-        PlaceWalls(0f);
-        PlaceWalls(-90f);
+        generatedBoxes?.ForEach((GameObject wall) => Destroy(wall));
+        generatedBoxes = new List<GameObject>();
+
+        //PlaceWalls(0f);
+        //PlaceWalls(-90f);
 
         for (int i = 0; i < ntries; i++)
         {
@@ -81,17 +88,22 @@ public class MapGeneratorSimple : MapGenerator
 
         for (int i = 0; i < hiders.Length; i++)
         {
-            itemPlacement.Add((PickPointRoom(0.5f * wallThickness + agentRadius), agentRadius));
+            //itemPlacement.Add((PickPointRoom(0.5f * wallThickness + agentRadius), agentRadius));
+            itemPlacement.Add((PickPointAnywhere(0.5f * wallThickness + agentRadius), agentRadius));
         }
         for (int i = 0; i < seekers.Length; i++)
         {
-            itemPlacement.Add((PickPointOutside(0.5f * wallThickness + agentRadius), agentRadius));
+            itemPlacement.Add((PickPointAnywhere(0.5f * wallThickness + agentRadius), agentRadius));
+            //itemPlacement.Add((PickPointOutside(0.5f * wallThickness + agentRadius), agentRadius));
         }
-        for (int i = 0; i < movables.Length; i++)
+
+        int numBoxes = Random.Range(numBoxesMin, numBoxesMax + 1);
+        for (int i = 0; i < numBoxes; i++)
         {
-            Vector2 placement = Random.Range(0, 2) == 0 ? PickPointRoom(0.5f * wallThickness + movableRadius)
+            itemPlacement.Add((PickPointAnywhere(0.5f * wallThickness + agentRadius), movableRadius));
+            /*Vector2 placement = Random.Range(0, 2) == 0 ? PickPointRoom(0.5f * wallThickness + movableRadius)
                                                         : PickPointOutside(0.5f * wallThickness + movableRadius);
-            itemPlacement.Add((placement, movableRadius));
+            itemPlacement.Add((placement, movableRadius));*/
         }
 
         for (int i = 0; i < itemPlacement.Count; i++)
@@ -110,20 +122,29 @@ public class MapGeneratorSimple : MapGenerator
             float x = itemPlacement[i].Item1.x;
             float z = itemPlacement[i].Item1.y;
             hiders[i].transform.position = new Vector3(x, hiders[i].transform.position.y, z);
+            hiders[i].transform.rotation = Quaternion.Euler(0f, Random.Range(0f, 360f), 0f);
         }
         for (int i = 0; i < seekers.Length; i++)
         {
             float x = itemPlacement[i + hiders.Length].Item1.x;
             float z = itemPlacement[i + hiders.Length].Item1.y;
             seekers[i].transform.position = new Vector3(x, seekers[i].transform.position.y, z);
+            seekers[i].transform.rotation = Quaternion.Euler(0f, Random.Range(0f, 360f), 0f);
         }
-        for (int i = 0; i < movables.Length; i++)
+        for (int i = 0; i < numBoxes; i++)
         {
             float x = itemPlacement[i + hiders.Length + seekers.Length].Item1.x;
             float z = itemPlacement[i + hiders.Length + seekers.Length].Item1.y;
-            movables[i].transform.position = new Vector3(x, movables[i].transform.position.y, z);
+            BoxHolding box = Instantiate(boxPrefab, new Vector3(x, boxY, z), Quaternion.Euler(0f, Random.Range(0f, 360f), 0f));
+            generatedBoxes.Add(box.gameObject);
         }
         return true;
+    }
+
+    private Vector2 PickPointAnywhere(float margin)
+    {
+        float v = mapSize * 0.5f - margin;
+        return PickPointRect(-v, v, -v, v);
     }
 
     private Vector2 PickPointRoom(float margin)
