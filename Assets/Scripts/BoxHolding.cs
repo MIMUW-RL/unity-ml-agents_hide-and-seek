@@ -53,9 +53,11 @@ public class BoxHolding : MonoBehaviour
     {
         if (tryLock)
         {
-            if (lockOwner == null && owner == null)
+            if (lockOwner == null && (owner == null || owner.IsHiding == agent.IsHiding))
             {
                 rigidbody.isKinematic = true;
+                owner?.ReleaseBox();
+                owner = null;
                 lockOwner = agent;
                 meshRenderer.material = agent.IsHiding ? materialLockHider : materialLockSeeker;
                 tag = agent.IsHiding ? tagLockHider : tagLockSeeker;
