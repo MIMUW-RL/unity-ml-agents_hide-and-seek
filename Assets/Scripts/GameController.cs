@@ -47,8 +47,11 @@ public class GameController : MonoBehaviour
 
     private void Start()
     {
-        hiders = FindObjectsOfType<AgentActions>().Where((AgentActions a) => a.IsHiding).ToList();
-        seekers = FindObjectsOfType<AgentActions>().Where((AgentActions a) => !a.IsHiding).ToList();
+        mapGenerator?.Generate();
+
+        AgentActions[] allAgents = FindObjectsOfType<AgentActions>();
+        hiders = allAgents.Where((AgentActions a) => a.IsHiding).ToList();
+        seekers = allAgents.Where((AgentActions a) => !a.IsHiding).ToList();
         holdObjects = FindObjectsOfType<BoxHolding>().ToList();
 
         hidersGroup = new SimpleMultiAgentGroup();
@@ -62,8 +65,6 @@ public class GameController : MonoBehaviour
         {
             seekersGroup.RegisterAgent(seeker.GetComponent<HideAndSeekAgent>());
         }
-
-        mapGenerator?.Generate();
     }
 
     private void Update()
@@ -146,20 +147,45 @@ public class GameController : MonoBehaviour
     public void ResetScene()
     {
         episodeTimer = 0;
-        foreach (AgentActions agent in hiders)
+        if (mapGenerator == null || !mapGenerator.InstantiatesAgentsOnReset())
         {
-            agent.ResetAgent();
+            foreach (AgentActions agent in hiders)
+            {
+                agent.ResetAgent();
+            }
+            foreach (AgentActions agent in seekers)
+            {
+                agent.ResetAgent();
+            }
         }
-        foreach (AgentActions agent in seekers)
+
+        if (mapGenerator == null || !mapGenerator.InstantiatesBoxesOnReset())
         {
-            agent.ResetAgent();
-        }
-        foreach (BoxHolding holdObject in holdObjects)
-        {
-            holdObject.Reset();
+            foreach (BoxHolding holdObject in holdObjects)
+            {
+                holdObject.Reset();
+            }
         }
 
         mapGenerator?.Generate();
+
+        if (mapGenerator != null && mapGenerator.InstantiatesAgentsOnReset())
+        {
+            hiders = ((MapGeneratorSimple)mapGenerator).GetInstantiatedHiders();
+            seekers = ((MapGeneratorSimple)mapGenerator).GetInstantiatedSeekers();
+
+            hidersGroup = new SimpleMultiAgentGroup();
+            foreach (AgentActions hider in hiders)
+            {
+                hidersGroup.RegisterAgent(hider.GetComponent<HideAndSeekAgent>());
+            }
+
+            seekersGroup = new SimpleMultiAgentGroup();
+            foreach (AgentActions seeker in seekers)
+            {
+                seekersGroup.RegisterAgent(seeker.GetComponent<HideAndSeekAgent>());
+            }
+        }
     }
 
 

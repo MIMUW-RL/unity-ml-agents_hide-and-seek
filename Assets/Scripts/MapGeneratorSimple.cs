@@ -1,42 +1,106 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class MapGeneratorSimple : MapGenerator
 {
     [SerializeField] private float mapSize = 20f;
-    [SerializeField] private float roomSize = 0.5f;
-    [SerializeField] private float doorWidth = 2.5f;
-    [SerializeField] private float wallY = 1f;
-    [SerializeField] private float wallThickness = 0.25f;
+
+    [Header("Agent placement")]
+    // instantiateAgents must be on if agent count should be randomized every episode
+    [SerializeField] private bool instantiateAgents = false;
+    [SerializeField] private Transform agentParent = null;
+    [SerializeField] private AgentActions hiderPrefab = null;
+    [SerializeField] private AgentActions seekerPrefab = null;
+    [SerializeField] private int numHidersMin = 2;
+    [SerializeField] private int numHidersMax = 3;
+    [SerializeField] private int numSeekersMin = 2;
+    [SerializeField] private int numSeekersMax = 3;
+    [SerializeField] private float agentY = 1f;
     [SerializeField] private float agentRadius = 0.75f;
-    [SerializeField] private float movableRadius = 1.5f;
 
-    [SerializeField] private AgentActions[] hiders = null;
-    [SerializeField] private AgentActions[] seekers = null;
-
-    [SerializeField] private Transform wallsParent = null;
-    [SerializeField] private GameObject wallPrefab = null;
-    [SerializeField] private BoxHolding boxPrefab = null;
+    [Header("Object placement")]
+    // instantiateBoxes must be on if box count should be randomized every episode
+    [SerializeField] private bool instantiateBoxes = true;
+    [SerializeField] private BoxHolding[] boxPrefabs = null;
     [SerializeField] private int numBoxesMin = 2;
     [SerializeField] private int numBoxesMax = 4;
     [SerializeField] private float boxY = 1f;
+    [SerializeField] private float objectRadius = 1.5f;
 
+    [Header("Subroom generation")]
+    [SerializeField] private bool generateSubroom = false;
+    [SerializeField] private Transform wallsParent = null;
+    [SerializeField] private GameObject wallPrefab = null;
+    [SerializeField] private float roomSize = 10f;
+    [SerializeField] private float doorWidth = 2.5f;
+    [SerializeField] private float wallY = 1f;
+    [SerializeField] private float wallThickness = 0.25f;
+
+    
     private const int ntries = 20;
 
     private List<GameObject> generatedWalls = null;
-    private List<GameObject> generatedBoxes = null;
+
+    private AgentActions[] hiders = null;
+    private AgentActions[] seekers = null;
+    private BoxHolding[] boxes = null;
+    private bool scannedObjects = false;
+
+    public List<AgentActions> GetInstantiatedHiders() => instantiateAgents ? hiders.ToList() : new List<AgentActions>();
+    public List<AgentActions> GetInstantiatedSeekers() => instantiateAgents ? seekers.ToList() : new List<AgentActions>();
+
+
 
     public override void Generate()
     {
+        if (!scannedObjects)
+        {
+            if (!instantiateAgents)
+            {
+                AgentActions[] allAgents = FindObjectsOfType<AgentActions>();
+                hiders = allAgents.Where((AgentActions agent) => agent.IsHiding).ToArray();
+                seekers = allAgents.Where((AgentActions agent) => !agent.IsHiding).ToArray();
+            }
+            if (!instantiateBoxes)
+            {
+                boxes = FindObjectsOfType<BoxHolding>();
+            }
+            scannedObjects = true;
+        }
+
         generatedWalls?.ForEach((GameObject wall) => Destroy(wall));
         generatedWalls = new List<GameObject>();
 
-        generatedBoxes?.ForEach((GameObject wall) => Destroy(wall));
-        generatedBoxes = new List<GameObject>();
+        if (instantiateAgents)
+        {
+            if (hiders != null)
+            {
+                Array.ForEach(hiders, (AgentActions hider) => Destroy(hider.gameObject));
+            }
+            if (seekers != null)
+            {
+                Array.ForEach(seekers, (AgentActions seeker) => Destroy(seeker.gameObject));
+            }
+        }
 
-        //PlaceWalls(0f);
-        //PlaceWalls(-90f);
+        if (instantiateBoxes)
+        {
+            if (boxes != null)
+            {
+                Array.ForEach(boxes, (BoxHolding box) => Destroy(box.gameObject));
+            }
+        }
+
+
+        if (generateSubroom)
+        {
+            PlaceWalls(0f);
+            PlaceWalls(-90f);
+        }
 
         for (int i = 0; i < ntries; i++)
         {
@@ -55,24 +119,23 @@ public class MapGeneratorSimple : MapGenerator
 
     private void PlaceWalls(float rotation)
     {
-        float wallSize = mapSize * roomSize;
-        Vector3 roomCenter = 0.5f * (mapSize - wallSize) * new Vector3(1f, 0f, -1f);
-        float wallZ = -mapSize * 0.5f + wallSize;
+        Vector3 roomCenter = 0.5f * (mapSize - roomSize) * new Vector3(1f, 0f, -1f);
+        float wallZ = -mapSize * 0.5f + roomSize;
 
-        float doorPosition = Random.Range(doorWidth * 0.5f, wallSize - doorWidth * 0.5f);
+        float doorPosition = Random.Range(doorWidth * 0.5f, roomSize - doorWidth * 0.5f);
         if (doorPosition > doorWidth * 0.5f + 0.25f)
         {
             float wallLength = doorPosition - doorWidth * 0.5f;
-            float wallX = mapSize * 0.5f - wallSize + wallLength * 0.5f;
+            float wallX = mapSize * 0.5f - roomSize + wallLength * 0.5f;
             GameObject wall = Instantiate(wallPrefab, new Vector3(wallX, wallY, wallZ), Quaternion.identity, wallsParent);
             wall.transform.localScale = new Vector3(wallLength, wall.transform.localScale.y, wall.transform.localScale.z);
             wall.transform.RotateAround(roomCenter, Vector3.up, rotation);
 
             generatedWalls.Add(wall);
         }
-        if (doorPosition < wallSize - doorWidth * 0.5f - 0.25f)
+        if (doorPosition < roomSize - doorWidth * 0.5f - 0.25f)
         {
-            float wallLength = wallSize - doorPosition - doorWidth * 0.5f;
+            float wallLength = roomSize - doorPosition - doorWidth * 0.5f;
             float wallX = mapSize * 0.5f - wallLength * 0.5f;
             GameObject wall = Instantiate(wallPrefab, new Vector3(wallX, wallY, wallZ), Quaternion.identity, wallsParent);
             wall.transform.localScale = new Vector3(wallLength, wall.transform.localScale.y, wall.transform.localScale.z);
@@ -86,24 +149,32 @@ public class MapGeneratorSimple : MapGenerator
     {
         List<(Vector2, float)> itemPlacement = new List<(Vector2, float)>();
 
-        for (int i = 0; i < hiders.Length; i++)
+        int numHiders = instantiateAgents ? Random.Range(numHidersMin, numHidersMax + 1) : hiders.Length;
+        int numSeekers = instantiateAgents ? Random.Range(numSeekersMin, numSeekersMax + 1) : seekers.Length;
+        for (int i = 0; i < numHiders; i++)
         {
-            //itemPlacement.Add((PickPointRoom(0.5f * wallThickness + agentRadius), agentRadius));
-            itemPlacement.Add((PickPointAnywhere(0.5f * wallThickness + agentRadius), agentRadius));
+            Vector2 point = generateSubroom ? PickPointRoom(0.5f * wallThickness + agentRadius) : PickPointAnywhere(0.5f * wallThickness + agentRadius);
+            itemPlacement.Add((point, agentRadius));
         }
-        for (int i = 0; i < seekers.Length; i++)
+        for (int i = 0; i < numSeekers; i++)
         {
-            itemPlacement.Add((PickPointAnywhere(0.5f * wallThickness + agentRadius), agentRadius));
-            //itemPlacement.Add((PickPointOutside(0.5f * wallThickness + agentRadius), agentRadius));
+            Vector2 point = generateSubroom ? PickPointOutside(0.5f * wallThickness + agentRadius) : PickPointAnywhere(0.5f * wallThickness + agentRadius);
+            itemPlacement.Add((point, agentRadius));
         }
 
-        int numBoxes = Random.Range(numBoxesMin, numBoxesMax + 1);
+        int numBoxes = instantiateBoxes ? Random.Range(numBoxesMin, numBoxesMax + 1) : boxes.Length;
         for (int i = 0; i < numBoxes; i++)
         {
-            itemPlacement.Add((PickPointAnywhere(0.5f * wallThickness + agentRadius), movableRadius));
-            /*Vector2 placement = Random.Range(0, 2) == 0 ? PickPointRoom(0.5f * wallThickness + movableRadius)
-                                                        : PickPointOutside(0.5f * wallThickness + movableRadius);
-            itemPlacement.Add((placement, movableRadius));*/
+            if (generateSubroom)
+            {
+                Vector2 placement = Random.Range(0, 2) == 0 ? PickPointRoom(0.5f * wallThickness + objectRadius)
+                                                            : PickPointOutside(0.5f * wallThickness + objectRadius);
+                itemPlacement.Add((placement, objectRadius));
+            }
+            else
+            {
+                itemPlacement.Add((PickPointAnywhere(0.5f * wallThickness + agentRadius), objectRadius));
+            }
         }
 
         for (int i = 0; i < itemPlacement.Count; i++)
@@ -117,26 +188,52 @@ public class MapGeneratorSimple : MapGenerator
             }
         }
 
-        for (int i = 0; i < hiders.Length; i++)
+        
+        if (instantiateAgents)
+        {
+            hiders = new AgentActions[numHiders];
+            seekers = new AgentActions[numSeekers];
+        }
+        for (int i = 0; i < numHiders; i++)
         {
             float x = itemPlacement[i].Item1.x;
             float z = itemPlacement[i].Item1.y;
-            hiders[i].transform.position = new Vector3(x, hiders[i].transform.position.y, z);
+            if (instantiateAgents)
+            {
+                hiders[i] = Instantiate(hiderPrefab, agentParent);
+            }
+            hiders[i].transform.position = new Vector3(x, agentY, z);
             hiders[i].transform.rotation = Quaternion.Euler(0f, Random.Range(0f, 360f), 0f);
         }
-        for (int i = 0; i < seekers.Length; i++)
+        for (int i = 0; i < numSeekers; i++)
         {
-            float x = itemPlacement[i + hiders.Length].Item1.x;
-            float z = itemPlacement[i + hiders.Length].Item1.y;
-            seekers[i].transform.position = new Vector3(x, seekers[i].transform.position.y, z);
+            int id = i + numHiders;
+            float x = itemPlacement[id].Item1.x;
+            float z = itemPlacement[id].Item1.y;
+            if (instantiateAgents)
+            {
+                seekers[i] = Instantiate(seekerPrefab, agentParent);
+            }
+            seekers[i].transform.position = new Vector3(x, agentY, z);
             seekers[i].transform.rotation = Quaternion.Euler(0f, Random.Range(0f, 360f), 0f);
+        }
+
+        if (instantiateBoxes)
+        {
+            boxes = new BoxHolding[numBoxes];
         }
         for (int i = 0; i < numBoxes; i++)
         {
-            float x = itemPlacement[i + hiders.Length + seekers.Length].Item1.x;
-            float z = itemPlacement[i + hiders.Length + seekers.Length].Item1.y;
-            BoxHolding box = Instantiate(boxPrefab, new Vector3(x, boxY, z), Quaternion.Euler(0f, Random.Range(0f, 360f), 0f));
-            generatedBoxes.Add(box.gameObject);
+            int id = i + numHiders + numSeekers;
+            float x = itemPlacement[id].Item1.x;
+            float z = itemPlacement[id].Item1.y;
+            if (instantiateBoxes)
+            {
+                BoxHolding boxPrefab = boxPrefabs[Random.Range(0, boxPrefabs.Length)];
+                boxes[i] = Instantiate(boxPrefab);
+            }
+            boxes[i].transform.position = new Vector3(x, boxY, z);
+            boxes[i].transform.rotation = Quaternion.Euler(0f, Random.Range(0f, 360f), 0f);
         }
         return true;
     }
@@ -149,14 +246,14 @@ public class MapGeneratorSimple : MapGenerator
 
     private Vector2 PickPointRoom(float margin)
     {
-        float u = mapSize * (0.5f - roomSize) + margin;
+        float u = mapSize * 0.5f - roomSize + margin;
         float v = mapSize * 0.5f - margin;
         return PickPointRect(u, v, -v, -u);
     }
 
     private Vector2 PickPointOutside(float margin)
     {
-        float u = mapSize * (0.5f - roomSize);
+        float u = mapSize * 0.5f - roomSize;
         float v = mapSize * 0.5f;
         
         float x1A = u + margin;
@@ -179,4 +276,8 @@ public class MapGeneratorSimple : MapGenerator
     {
         return new Vector2(Random.Range(minX, maxX), Random.Range(minZ, maxZ));
     }
+
+
+    public override bool InstantiatesAgentsOnReset() => instantiateAgents;
+    public override bool InstantiatesBoxesOnReset() => instantiateBoxes;
 }
