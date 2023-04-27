@@ -21,8 +21,8 @@ public class HideAndSeekAgent : Agent
         sensor.AddObservation(agentActions.IsHiding);
 
         IEnumerable<AgentActions> teamAgents = agentActions.IsHiding
-                                             ? GameController.Instance.GetHiders()
-                                             : GameController.Instance.GetSeekers();
+                                             ? agentActions.GameController.GetHiders()
+                                             : agentActions.GameController.GetSeekers();
 
         foreach (AgentActions teamAgent in teamAgents)
         {
@@ -74,10 +74,10 @@ public class HideAndSeekAgent : Agent
         {
             agentActions.LockBox(false);
         }
-
-        if (!GameController.Instance.UseGroupReward)
+        
+        if (!agentActions.GameController.UseGroupReward)
         {
-            AddReward(GameController.Instance.HidersReward * (agentActions.IsHiding ? 1 : -1));
+            AddReward(agentActions.GameController.HidersReward * (agentActions.IsHiding ? 1 : -1));
         }
     }
 

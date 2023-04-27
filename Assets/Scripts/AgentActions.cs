@@ -25,6 +25,8 @@ public class AgentActions : MonoBehaviour
 
     public bool IsHolding { get { return grabbedBox != null; } }
 
+    public GameController GameController { get; set; }
+
 
     private void Start()
     {
@@ -34,7 +36,7 @@ public class AgentActions : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (isHiding || GameController.Instance.GracePeriodEnded)
+        if (isHiding || GameController.GracePeriodEnded)
         {
             Movement();
         }

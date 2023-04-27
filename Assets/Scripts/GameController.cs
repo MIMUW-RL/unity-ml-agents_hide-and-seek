@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.MLAgents;
@@ -5,8 +6,6 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
-    public static GameController Instance { get; private set; } = null;
-
     [SerializeField] private int episodeSteps = 240;
     [SerializeField] private float gracePeriodFraction = 0.4f;
     [SerializeField] private float coneAngle = 0.375f * 180f;
@@ -32,24 +31,12 @@ public class GameController : MonoBehaviour
 
 
 
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Debug.LogWarning("Multiple GameController instances found in a scene");
-            Destroy(this);
-        }
-    }
-
     private void Start()
     {
         mapGenerator?.Generate();
 
-        AgentActions[] allAgents = FindObjectsOfType<AgentActions>();
+        AgentActions[] allAgents = GetComponentsInChildren<AgentActions>();
+        Array.ForEach(allAgents, (AgentActions agent) => agent.GameController = this);
         hiders = allAgents.Where((AgentActions a) => a.IsHiding).ToList();
         seekers = allAgents.Where((AgentActions a) => !a.IsHiding).ToList();
         holdObjects = FindObjectsOfType<BoxHolding>().ToList();
@@ -77,12 +64,18 @@ public class GameController : MonoBehaviour
         if (GracePeriodEnded)
         {
             HidersReward = AreAllHidersHidden() ? 1 : -1;
-            textMeshReward.text = "Hiders reward: " + HidersReward;
+            if (textMeshReward != null)
+            {
+                textMeshReward.text = "Hiders reward: " + HidersReward;
+            }
         }
         else
         {
             HidersReward = 0;
-            textMeshReward.text = "Grace period";
+            if (textMeshReward != null)
+            {
+                textMeshReward.text = "Grace period";
+            }
         }
     }
 
@@ -173,6 +166,8 @@ public class GameController : MonoBehaviour
         {
             hiders = ((MapGeneratorSimple)mapGenerator).GetInstantiatedHiders();
             seekers = ((MapGeneratorSimple)mapGenerator).GetInstantiatedSeekers();
+            hiders.ForEach((AgentActions agent) => agent.GameController = this);
+            seekers.ForEach((AgentActions agent) => agent.GameController = this);
 
             hidersGroup = new SimpleMultiAgentGroup();
             foreach (AgentActions hider in hiders)

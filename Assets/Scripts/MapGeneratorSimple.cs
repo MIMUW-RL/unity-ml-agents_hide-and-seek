@@ -61,7 +61,7 @@ public class MapGeneratorSimple : MapGenerator
         {
             if (!instantiateAgents)
             {
-                AgentActions[] allAgents = FindObjectsOfType<AgentActions>();
+                AgentActions[] allAgents = GetComponentsInChildren<AgentActions>();
                 hiders = allAgents.Where((AgentActions agent) => agent.IsHiding).ToArray();
                 seekers = allAgents.Where((AgentActions agent) => !agent.IsHiding).ToArray();
             }
@@ -127,7 +127,7 @@ public class MapGeneratorSimple : MapGenerator
         {
             float wallLength = doorPosition - doorWidth * 0.5f;
             float wallX = mapSize * 0.5f - roomSize + wallLength * 0.5f;
-            GameObject wall = Instantiate(wallPrefab, new Vector3(wallX, wallY, wallZ), Quaternion.identity, wallsParent);
+            GameObject wall = Instantiate(wallPrefab, new Vector3(wallX, wallY, wallZ) + transform.position, Quaternion.identity, wallsParent);
             wall.transform.localScale = new Vector3(wallLength, wall.transform.localScale.y, wall.transform.localScale.z);
             wall.transform.RotateAround(roomCenter, Vector3.up, rotation);
 
@@ -137,7 +137,7 @@ public class MapGeneratorSimple : MapGenerator
         {
             float wallLength = roomSize - doorPosition - doorWidth * 0.5f;
             float wallX = mapSize * 0.5f - wallLength * 0.5f;
-            GameObject wall = Instantiate(wallPrefab, new Vector3(wallX, wallY, wallZ), Quaternion.identity, wallsParent);
+            GameObject wall = Instantiate(wallPrefab, new Vector3(wallX, wallY, wallZ) + transform.position, Quaternion.identity, wallsParent);
             wall.transform.localScale = new Vector3(wallLength, wall.transform.localScale.y, wall.transform.localScale.z);
             wall.transform.RotateAround(roomCenter, Vector3.up, rotation);
 
@@ -202,7 +202,7 @@ public class MapGeneratorSimple : MapGenerator
             {
                 hiders[i] = Instantiate(hiderPrefab, agentParent);
             }
-            hiders[i].transform.position = new Vector3(x, agentY, z);
+            hiders[i].transform.position = new Vector3(x, agentY, z) + transform.position;
             hiders[i].transform.rotation = Quaternion.Euler(0f, Random.Range(0f, 360f), 0f);
         }
         for (int i = 0; i < numSeekers; i++)
@@ -214,7 +214,7 @@ public class MapGeneratorSimple : MapGenerator
             {
                 seekers[i] = Instantiate(seekerPrefab, agentParent);
             }
-            seekers[i].transform.position = new Vector3(x, agentY, z);
+            seekers[i].transform.position = new Vector3(x, agentY, z) + transform.position;
             seekers[i].transform.rotation = Quaternion.Euler(0f, Random.Range(0f, 360f), 0f);
         }
 
@@ -232,7 +232,7 @@ public class MapGeneratorSimple : MapGenerator
                 BoxHolding boxPrefab = boxPrefabs[Random.Range(0, boxPrefabs.Length)];
                 boxes[i] = Instantiate(boxPrefab);
             }
-            boxes[i].transform.position = new Vector3(x, boxY, z);
+            boxes[i].transform.position = new Vector3(x, boxY, z) + transform.position;
             boxes[i].transform.rotation = Quaternion.Euler(0f, Random.Range(0f, 360f), 0f);
         }
         return true;
