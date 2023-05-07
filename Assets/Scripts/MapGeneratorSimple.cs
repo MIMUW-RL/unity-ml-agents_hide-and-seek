@@ -40,8 +40,9 @@ public class MapGeneratorSimple : MapGenerator
     [SerializeField] private float wallY = 1f;
     [SerializeField] private float wallThickness = 0.25f;
 
-    
-    private const int ntries = 20;
+
+    private const int numTriesAgent = 50;
+    private const int numTriesBox = 15;
 
     private List<GameObject> generatedWalls = null;
 
@@ -102,18 +103,7 @@ public class MapGeneratorSimple : MapGenerator
             PlaceWalls(-90f);
         }
 
-        for (int i = 0; i < ntries; i++)
-        {
-            if (TryPlaceObjects())
-            {
-                break;
-            }
-
-            if (i == ntries - 1)
-            {
-                Debug.LogWarning("Couldn't randomize object placement");
-            }
-        }
+        PlaceStuff();
     }
 
 
@@ -145,7 +135,7 @@ public class MapGeneratorSimple : MapGenerator
         }
     }
 
-    private bool TryPlaceObjects()
+    private void PlaceStuff()
     {
         List<(Vector2, float)> itemPlacement = new List<(Vector2, float)>();
 
@@ -153,38 +143,41 @@ public class MapGeneratorSimple : MapGenerator
         int numSeekers = instantiateAgents ? Random.Range(numSeekersMin, numSeekersMax + 1) : seekers.Length;
         for (int i = 0; i < numHiders; i++)
         {
-            Vector2 point = generateSubroom ? PickPointRoom(0.5f * wallThickness + agentRadius) : PickPointAnywhere(0.5f * wallThickness + agentRadius);
-            itemPlacement.Add((point, agentRadius));
+            if (!TryPlaceObject(itemPlacement, PickPointHider, agentRadius, numTriesAgent))
+            {
+                // this shouldn't happen during the training, as it may break trainer
+                Debug.LogError("Couldn't randomize agent placement");
+                if (instantiateAgents)
+                {
+                    hiders = new AgentActions[0];
+                    seekers = new AgentActions[0];
+                }
+                return;
+            }
         }
         for (int i = 0; i < numSeekers; i++)
         {
-            Vector2 point = generateSubroom ? PickPointOutside(0.5f * wallThickness + agentRadius) : PickPointAnywhere(0.5f * wallThickness + agentRadius);
-            itemPlacement.Add((point, agentRadius));
+            if (!TryPlaceObject(itemPlacement, PickPointSeeker, agentRadius, numTriesAgent))
+            {
+                // this shouldn't happen during the training, as it may break trainer
+                Debug.LogError("Couldn't randomize agent placement");
+                if (instantiateAgents)
+                {
+                    hiders = new AgentActions[0];
+                    seekers = new AgentActions[0];
+                }
+                return;
+            }
         }
 
         int numBoxes = instantiateBoxes ? Random.Range(numBoxesMin, numBoxesMax + 1) : boxes.Length;
         for (int i = 0; i < numBoxes; i++)
         {
-            if (generateSubroom)
+            if (!TryPlaceObject(itemPlacement, PickPointBox, objectRadius, numTriesBox))
             {
-                Vector2 placement = Random.Range(0, 2) == 0 ? PickPointRoom(0.5f * wallThickness + objectRadius)
-                                                            : PickPointOutside(0.5f * wallThickness + objectRadius);
-                itemPlacement.Add((placement, objectRadius));
-            }
-            else
-            {
-                itemPlacement.Add((PickPointAnywhere(0.5f * wallThickness + agentRadius), objectRadius));
-            }
-        }
-
-        for (int i = 0; i < itemPlacement.Count; i++)
-        {
-            for (int j = i + 1; j < itemPlacement.Count; j++)
-            {
-                if (Vector2.Distance(itemPlacement[i].Item1, itemPlacement[j].Item1) < itemPlacement[i].Item2 + itemPlacement[j].Item2)
-                {
-                    return false;
-                }
+                Debug.LogWarning("Couldn't randomize box placement");
+                numBoxes = i;
+                break;
             }
         }
 
@@ -235,8 +228,32 @@ public class MapGeneratorSimple : MapGenerator
             boxes[i].transform.position = new Vector3(x, boxY, z) + transform.position;
             boxes[i].transform.rotation = Quaternion.Euler(0f, Random.Range(0f, 360f), 0f);
         }
-        return true;
     }
+
+    private bool TryPlaceObject(List<(Vector2, float)> itemPlacement, Func<Vector2> pickPointFn, float radius, int numTries)
+    {
+        for (int _ = 0; _ < numTries; _++)
+        {
+            Vector2 point = pickPointFn.Invoke();
+            bool correct = true;
+            for (int i = 0; i < itemPlacement.Count; i++)
+            {
+                if (Vector2.Distance(itemPlacement[i].Item1, point) < itemPlacement[i].Item2 + radius)
+                {
+                    correct = false;
+                    break;
+                }
+            }
+
+            if (correct)
+            {
+                itemPlacement.Add((point, radius));
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     private Vector2 PickPointAnywhere(float margin)
     {
@@ -275,6 +292,31 @@ public class MapGeneratorSimple : MapGenerator
     private Vector2 PickPointRect(float minX, float maxX, float minZ, float maxZ)
     {
         return new Vector2(Random.Range(minX, maxX), Random.Range(minZ, maxZ));
+    }
+
+    private Vector2 PickPointHider()
+    {
+        return generateSubroom ? PickPointRoom(0.5f * wallThickness + agentRadius)
+                               : PickPointAnywhere(0.5f * wallThickness + agentRadius);
+    }
+
+    private Vector2 PickPointSeeker()
+    {
+        return generateSubroom ? PickPointOutside(0.5f * wallThickness + agentRadius)
+                               : PickPointAnywhere(0.5f * wallThickness + agentRadius);
+    }
+
+    private Vector2 PickPointBox()
+    {
+        if (generateSubroom)
+        {
+            return Random.Range(0, 2) == 0 ? PickPointRoom(0.5f * wallThickness + objectRadius)
+                                           : PickPointOutside(0.5f * wallThickness + objectRadius);
+        }
+        else
+        {
+            return PickPointAnywhere(0.5f * wallThickness + objectRadius);
+        }
     }
 
 
