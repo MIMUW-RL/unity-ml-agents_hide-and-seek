@@ -14,8 +14,10 @@ public class HideAndSeekAgent : Agent
 
     public override void CollectObservations(VectorSensor sensor)
     {
+        Vector3 platformCenter = agentActions.GameController.transform.position;
+
         // self -- 8 floats
-        sensor.AddObservation(transform.position);
+        sensor.AddObservation(transform.position - platformCenter);
         sensor.AddObservation(NormalizeAngle(transform.rotation.eulerAngles.y));
         sensor.AddObservation(agentActions.Rigidbody.velocity);
         sensor.AddObservation(agentActions.IsHiding);
@@ -29,9 +31,10 @@ public class HideAndSeekAgent : Agent
             if (teamAgent != agentActions)
             {
                 float[] obs = new float[7];
-                obs[0] = teamAgent.transform.position.x;
-                obs[1] = teamAgent.transform.position.y;
-                obs[2] = teamAgent.transform.position.z;
+                Vector3 teamAgentPosition = teamAgent.transform.position - platformCenter;
+                obs[0] = teamAgentPosition.x;
+                obs[1] = teamAgentPosition.y;
+                obs[2] = teamAgentPosition.z;
                 obs[3] = NormalizeAngle(teamAgent.transform.rotation.eulerAngles.y);
                 obs[4] = teamAgent.Rigidbody.velocity.x;
                 obs[5] = teamAgent.Rigidbody.velocity.y;

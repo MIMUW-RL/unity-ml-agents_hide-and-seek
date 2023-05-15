@@ -69,7 +69,6 @@ public class GameController : MonoBehaviour
 
         if (GracePeriodEnded)
         {
-            HidersReward = AreAllHidersHidden() ? 1 : -1;
             if (textMeshReward != null)
             {
                 textMeshReward.text = "Hiders reward: " + HidersReward;
@@ -77,7 +76,6 @@ public class GameController : MonoBehaviour
         }
         else
         {
-            HidersReward = 0;
             if (textMeshReward != null)
             {
                 textMeshReward.text = "Grace period";
@@ -99,6 +97,7 @@ public class GameController : MonoBehaviour
         }
         else if (GracePeriodEnded)
         {
+            HidersReward = AreAllHidersHidden() ? 1 : -1;
             stepsHidden += HidersReward > 0 ? 1 : 0;
             if (HidersReward < 0)
             {
@@ -109,6 +108,10 @@ public class GameController : MonoBehaviour
                 hidersGroup.AddGroupReward(HidersReward);
                 seekersGroup.AddGroupReward(-HidersReward);
             }
+        }
+        else
+        {
+            HidersReward = 0;
         }
     }
 
@@ -154,6 +157,7 @@ public class GameController : MonoBehaviour
     {
         stepsHidden = 0;
         hidersPerfectGame = true;
+        HidersReward = 0;
         episodeTimer = 0;
         if (mapGenerator == null || !mapGenerator.InstantiatesAgentsOnReset())
         {
