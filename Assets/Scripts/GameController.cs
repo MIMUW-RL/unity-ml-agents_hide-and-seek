@@ -22,6 +22,10 @@ public class GameController : MonoBehaviour
     private SimpleMultiAgentGroup seekersGroup;
     private List<BoxHolding> holdObjects;
 
+    private int stepsHidden = 0;
+    private bool hidersPerfectGame = false;
+    private StatsRecorder statsRecorder = null;
+
     public int HidersReward { get; private set; } = 0;
     public bool UseGroupReward => useGroupReward;
     public bool GracePeriodEnded
@@ -52,6 +56,8 @@ public class GameController : MonoBehaviour
         {
             seekersGroup.RegisterAgent(seeker.GetComponent<HideAndSeekAgent>());
         }
+
+        statsRecorder = Academy.Instance.StatsRecorder;
     }
 
     private void Update()
@@ -85,12 +91,19 @@ public class GameController : MonoBehaviour
 
         if (episodeTimer >= episodeSteps)
         {
+            statsRecorder.Add("Environment/TimeHidden", (float)stepsHidden / episodeSteps / (1f - gracePeriodFraction));
+            statsRecorder.Add("Environment/HiderWinRatio", hidersPerfectGame ? 1 : 0);
             hidersGroup.EndGroupEpisode();
             seekersGroup.EndGroupEpisode();
             ResetScene();
         }
         else if (GracePeriodEnded)
         {
+            stepsHidden += HidersReward > 0 ? 1 : 0;
+            if (HidersReward < 0)
+            {
+                hidersPerfectGame = false;
+            }
             if (useGroupReward)
             {
                 hidersGroup.AddGroupReward(HidersReward);
@@ -139,6 +152,8 @@ public class GameController : MonoBehaviour
 
     public void ResetScene()
     {
+        stepsHidden = 0;
+        hidersPerfectGame = true;
         episodeTimer = 0;
         if (mapGenerator == null || !mapGenerator.InstantiatesAgentsOnReset())
         {
