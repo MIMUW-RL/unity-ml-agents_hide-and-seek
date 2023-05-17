@@ -572,7 +572,10 @@ MonoBehaviour:
   episodeSteps: 500
   gracePeriodFraction: 0.4
   coneAngle: 67.5
-  useGroupReward: 0
+  individualRewardType: 2
+  individualRewardMultiplier: 1
+  groupRewardType: 0
+  groupRewardMultiplier: 1
   mapGenerator: {fileID: 4259836608732555140}
   textMeshReward: {fileID: 0}
 --- !u!114 &4259836608732555140

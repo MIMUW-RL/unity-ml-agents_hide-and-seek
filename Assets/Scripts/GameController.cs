@@ -9,7 +9,13 @@ public class GameController : MonoBehaviour
     [SerializeField] private int episodeSteps = 240;
     [SerializeField] private float gracePeriodFraction = 0.4f;
     [SerializeField] private float coneAngle = 0.375f * 180f;
-    [SerializeField] private bool useGroupReward = true;
+
+    public enum IndividualRewardType { None, Solo, Team };
+    public enum GroupRewardType { None, Team };
+    [SerializeField] private IndividualRewardType individualRewardType = IndividualRewardType.None;
+    [SerializeField] private float individualRewardMultiplier = 1.0f;
+    [SerializeField] private GroupRewardType groupRewardType = GroupRewardType.None;
+    [SerializeField] private float groupRewardMultiplier = 1.0f;
 
     [SerializeField] private MapGenerator mapGenerator = null;
 
@@ -20,14 +26,14 @@ public class GameController : MonoBehaviour
     private List<AgentActions> seekers;
     private SimpleMultiAgentGroup hidersGroup;
     private SimpleMultiAgentGroup seekersGroup;
+    private bool[,] visibilityMatrix;
     private List<BoxHolding> holdObjects;
 
     private int stepsHidden = 0;
     private bool hidersPerfectGame = false;
     private StatsRecorder statsRecorder = null;
 
-    public int HidersReward { get; private set; } = 0;
-    public bool UseGroupReward => useGroupReward;
+    public int HidersGroupReward { get; private set; } = 0;
     public bool GracePeriodEnded
     {
         get { return episodeTimer >= episodeSteps * gracePeriodFraction; }
@@ -43,6 +49,7 @@ public class GameController : MonoBehaviour
         Array.ForEach(allAgents, (AgentActions agent) => agent.GameController = this);
         hiders = allAgents.Where((AgentActions a) => a.IsHiding).ToList();
         seekers = allAgents.Where((AgentActions a) => !a.IsHiding).ToList();
+        visibilityMatrix = new bool[hiders.Count, seekers.Count];
         holdObjects = FindObjectsOfType<BoxHolding>().ToList();
 
         hidersGroup = new SimpleMultiAgentGroup();
@@ -71,7 +78,7 @@ public class GameController : MonoBehaviour
         {
             if (textMeshReward != null)
             {
-                textMeshReward.text = "Hiders reward: " + HidersReward;
+                textMeshReward.text = "Hiders reward: " + HidersGroupReward;
             }
         }
         else
@@ -97,21 +104,22 @@ public class GameController : MonoBehaviour
         }
         else if (GracePeriodEnded)
         {
-            HidersReward = AreAllHidersHidden() ? 1 : -1;
-            stepsHidden += HidersReward > 0 ? 1 : 0;
-            if (HidersReward < 0)
+            FillVisibilityMatrix();
+            HidersGroupReward = AreAllHidersHidden() ? 1 : -1;
+            stepsHidden += HidersGroupReward > 0 ? 1 : 0;
+            if (HidersGroupReward < 0)
             {
                 hidersPerfectGame = false;
             }
-            if (useGroupReward)
+            if (groupRewardType == GroupRewardType.Team)
             {
-                hidersGroup.AddGroupReward(HidersReward);
-                seekersGroup.AddGroupReward(-HidersReward);
+                hidersGroup.AddGroupReward(HidersGroupReward * groupRewardMultiplier);
+                seekersGroup.AddGroupReward(-HidersGroupReward * groupRewardMultiplier);
             }
         }
         else
         {
-            HidersReward = 0;
+            HidersGroupReward = 0;
         }
     }
 
@@ -152,12 +160,57 @@ public class GameController : MonoBehaviour
         return false;
     }
 
+    public float GetIndividualReward(AgentActions agent)
+    {
+        if (individualRewardType == IndividualRewardType.None)
+        {
+            return 0;
+        }
+        if (individualRewardType == IndividualRewardType.Team)
+        {
+            return AreAllHidersHidden() == agent.IsHiding
+                ?  individualRewardMultiplier
+                : -individualRewardMultiplier;
+        }
+
+        for (int i = 0; i < hiders.Count; i++)
+        {
+            if (agent.GetInstanceID() == hiders[i].GetInstanceID())
+            {
+                for (int j = 0; j < seekers.Count; j++)
+                {
+                    if (visibilityMatrix[i, j])
+                    {
+                        return -individualRewardMultiplier;
+                    }
+                }
+                return individualRewardMultiplier;
+            }
+        }
+
+        for (int j = 0; j < seekers.Count; j++)
+        {
+            if (agent.GetInstanceID() == seekers[j].GetInstanceID())
+            {
+                for (int i = 0; i < hiders.Count; i++)
+                {
+                    if (visibilityMatrix[i, j])
+                    {
+                        return individualRewardMultiplier;
+                    }
+                }
+                return -individualRewardMultiplier;
+            }
+        }
+
+        return 0;
+    }
 
     public void ResetScene()
     {
         stepsHidden = 0;
         hidersPerfectGame = true;
-        HidersReward = 0;
+        HidersGroupReward = 0;
         episodeTimer = 0;
         if (mapGenerator == null || !mapGenerator.InstantiatesAgentsOnReset())
         {
@@ -187,6 +240,7 @@ public class GameController : MonoBehaviour
             seekers = ((MapGeneratorSimple)mapGenerator).GetInstantiatedSeekers();
             hiders.ForEach((AgentActions agent) => agent.GameController = this);
             seekers.ForEach((AgentActions agent) => agent.GameController = this);
+            visibilityMatrix = new bool[hiders.Count, seekers.Count];
 
             hidersGroup = new SimpleMultiAgentGroup();
             foreach (AgentActions hider in hiders)
@@ -200,23 +254,50 @@ public class GameController : MonoBehaviour
                 seekersGroup.RegisterAgent(seeker.GetComponent<HideAndSeekAgent>());
             }
         }
-    }
-
-
-    private bool AreAllHidersHidden()
-    {
-        bool retval = true;
-        foreach (AgentActions seeker in seekers)
+        else
         {
-            foreach (AgentActions hider in hiders)
+            for (int i = 0; i < visibilityMatrix.GetLength(0); i++)
             {
-                if (AgentSeesAgent(seeker, hider, out RaycastHit hit))
+                for (int j = 0; j < visibilityMatrix.GetLength(1); j++)
                 {
-                    Debug.DrawLine(seeker.transform.position, hit.point, Color.red);
-                    retval = false;
+                    visibilityMatrix[i, j] = false;
                 }
             }
         }
-        return retval;
+    }
+
+
+    private void FillVisibilityMatrix()
+    {
+        for (int i = 0; i < hiders.Count; i++)
+        {
+            for (int j = 0; j < seekers.Count; j++)
+            {
+                if (AgentSeesAgent(seekers[j], hiders[i], out RaycastHit hit))
+                {
+                    visibilityMatrix[i, j] = true;
+                    Debug.DrawLine(seekers[j].transform.position, hit.point, Color.red);
+                }
+                else
+                {
+                    visibilityMatrix[i, j] = false;
+                }
+            }
+        }
+    }
+
+    private bool AreAllHidersHidden()
+    {
+        for (int i = 0; i < hiders.Count; i++)
+        {
+            for (int j = 0; j < seekers.Count; j++)
+            {
+                if (visibilityMatrix[i, j])
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }
