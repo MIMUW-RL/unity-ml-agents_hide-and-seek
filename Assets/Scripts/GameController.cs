@@ -162,6 +162,11 @@ public class GameController : MonoBehaviour
 
     public float GetIndividualReward(AgentActions agent)
     {
+        if (!GracePeriodEnded)
+        {
+            return 0;
+        }
+
         if (individualRewardType == IndividualRewardType.None)
         {
             return 0;
