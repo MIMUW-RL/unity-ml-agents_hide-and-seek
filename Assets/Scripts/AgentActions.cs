@@ -168,7 +168,7 @@ public class AgentActions : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        if (grabbedBox != null)
+        if (grabbedBox != null && GameController.DebugDrawBoxHold)
         {
             Gizmos.DrawLine(transform.position, grabbedBox.transform.position);
         }

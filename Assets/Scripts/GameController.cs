@@ -19,7 +19,13 @@ public class GameController : MonoBehaviour
 
     [SerializeField] private MapGenerator mapGenerator = null;
 
+    [Header("Debug")]
+    [SerializeField] private bool debugDrawBoxHold = true;
+    [SerializeField] private bool debugDrawVisibility = true;
+    [SerializeField] private bool debugDrawIndividualReward = true;
+    [SerializeField] private bool debugLogMatchResult = false;
     [SerializeField] private TMPro.TextMeshProUGUI textMeshReward = null;
+
 
     private int episodeTimer = 0;
     private List<AgentActions> hiders;
@@ -38,6 +44,11 @@ public class GameController : MonoBehaviour
     {
         get { return episodeTimer >= episodeSteps * gracePeriodFraction; }
     }
+
+    public bool DebugDrawBoxHold => debugDrawBoxHold;
+    public bool DebugDrawVisibility => debugDrawVisibility;
+    public bool DebugDrawIndividualReward => debugDrawIndividualReward;
+    public bool DebugLogMatchResult => debugLogMatchResult;
 
 
 
@@ -94,9 +105,14 @@ public class GameController : MonoBehaviour
     {
         episodeTimer++;
 
-        if (episodeTimer >= episodeSteps)
+        if (episodeTimer > episodeSteps)
         {
-            statsRecorder.Add("Environment/TimeHidden", (float)stepsHidden / episodeSteps / (1f - gracePeriodFraction));
+            float timeHidden = stepsHidden / (episodeSteps * (1f - gracePeriodFraction));
+            if (debugLogMatchResult)
+            {
+                Debug.LogFormat("Team {0} won; Time percentage hidden - {1}", hidersPerfectGame ? "hiders" : "seekers", timeHidden * 100f);
+            }
+            statsRecorder.Add("Environment/TimeHidden", timeHidden);
             statsRecorder.Add("Environment/HiderWinRatio", hidersPerfectGame ? 1 : 0);
             hidersGroup.EndGroupEpisode();
             seekersGroup.EndGroupEpisode();
@@ -281,7 +297,10 @@ public class GameController : MonoBehaviour
                 if (AgentSeesAgent(seekers[j], hiders[i], out RaycastHit hit))
                 {
                     visibilityMatrix[i, j] = true;
-                    Debug.DrawLine(seekers[j].transform.position, hit.point, Color.red);
+                    if (debugDrawVisibility)
+                    {
+                        Debug.DrawLine(seekers[j].transform.position, hit.point, Color.red);
+                    }
                 }
                 else
                 {
