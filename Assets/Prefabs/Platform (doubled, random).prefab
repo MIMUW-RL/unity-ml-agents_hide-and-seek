@@ -413,11 +413,16 @@ MonoBehaviour:
   episodeSteps: 500
   gracePeriodFraction: 0.4
   coneAngle: 67.5
+  mapGenerator: {fileID: 4262886925824644038}
   individualRewardType: 2
   individualRewardMultiplier: 1
   groupRewardType: 0
-  groupRewardMultiplier: 1
-  mapGenerator: {fileID: 4262886925824644038}
+  groupRewardMultiplier: 0
+  winConditionThreshold: 1
+  debugDrawBoxHold: 1
+  debugDrawVisibility: 1
+  debugDrawIndividualReward: 1
+  debugLogMatchResult: 0
   textMeshReward: {fileID: 0}
 --- !u!114 &4262886925824644038
 MonoBehaviour:

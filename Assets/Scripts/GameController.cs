@@ -10,14 +10,26 @@ public class GameController : MonoBehaviour
     [SerializeField] private float gracePeriodFraction = 0.4f;
     [SerializeField] private float coneAngle = 0.375f * 180f;
 
-    public enum IndividualRewardType { None, Solo, Team };
-    public enum GroupRewardType { None, Team };
+    [SerializeField] private MapGenerator mapGenerator = null;
+
+    public enum IndividualRewardType
+    { 
+        None,  // no reward
+        Solo,  // +1/-1 based on whether individual agent hides from/sees the other team, given per step
+        Team   // +1/-1 based on whether the team is hidden from/sees the other team, given per step
+    };
+    public enum GroupRewardType
+    {
+        None,         // no reward
+        PerStep,      // +1/-1 per step, based on whether the team is hidden/sees the other team
+        WinCondition  // +1/-1 at the end of episode, based on how much time all hiders were hidden
+    };
+    [Header("Rewards")]
     [SerializeField] private IndividualRewardType individualRewardType = IndividualRewardType.None;
     [SerializeField] private float individualRewardMultiplier = 1.0f;
     [SerializeField] private GroupRewardType groupRewardType = GroupRewardType.None;
     [SerializeField] private float groupRewardMultiplier = 1.0f;
-
-    [SerializeField] private MapGenerator mapGenerator = null;
+    [SerializeField] private float winConditionThreshold = 1.0f;
 
     [Header("Debug")]
     [SerializeField] private bool debugDrawBoxHold = true;
@@ -36,7 +48,7 @@ public class GameController : MonoBehaviour
     private List<BoxHolding> holdObjects;
 
     private int stepsHidden = 0;
-    private bool hidersPerfectGame = false;
+    private bool hidersPerfectGame = true;
     private StatsRecorder statsRecorder = null;
 
     public int HidersGroupReward { get; private set; } = 0;
@@ -108,12 +120,20 @@ public class GameController : MonoBehaviour
         if (episodeTimer > episodeSteps)
         {
             float timeHidden = stepsHidden / (episodeSteps * (1f - gracePeriodFraction));
+            bool hidersWon = winConditionThreshold >= 1f ? hidersPerfectGame : timeHidden > winConditionThreshold;
             if (debugLogMatchResult)
             {
-                Debug.LogFormat("Team {0} won; Time percentage hidden - {1}", hidersPerfectGame ? "hiders" : "seekers", timeHidden * 100f);
+                Debug.LogFormat("Team {0} won; Time percentage hidden - {1}", hidersWon ? "hiders" : "seekers", timeHidden * 100f);
             }
             statsRecorder.Add("Environment/TimeHidden", timeHidden);
-            statsRecorder.Add("Environment/HiderWinRatio", hidersPerfectGame ? 1 : 0);
+
+            if (groupRewardType == GroupRewardType.WinCondition)
+            {
+                hidersGroup.AddGroupReward(hidersWon ? groupRewardMultiplier : -groupRewardMultiplier);
+                seekersGroup.AddGroupReward(hidersWon ? -groupRewardMultiplier : groupRewardMultiplier);
+            }
+            statsRecorder.Add("Environment/HiderWinRatio", hidersWon ? 1 : 0);
+
             hidersGroup.EndGroupEpisode();
             seekersGroup.EndGroupEpisode();
             ResetScene();
@@ -127,7 +147,7 @@ public class GameController : MonoBehaviour
             {
                 hidersPerfectGame = false;
             }
-            if (groupRewardType == GroupRewardType.Team)
+            if (groupRewardType == GroupRewardType.PerStep)
             {
                 hidersGroup.AddGroupReward(HidersGroupReward * groupRewardMultiplier);
                 seekersGroup.AddGroupReward(-HidersGroupReward * groupRewardMultiplier);
