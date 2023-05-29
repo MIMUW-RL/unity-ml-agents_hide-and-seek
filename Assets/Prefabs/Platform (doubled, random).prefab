@@ -415,9 +415,9 @@ MonoBehaviour:
   coneAngle: 67.5
   mapGenerator: {fileID: 4262886925824644038}
   individualRewardType: 2
-  individualRewardMultiplier: 1
-  groupRewardType: 0
-  groupRewardMultiplier: 0
+  individualRewardMultiplier: 0.004
+  groupRewardType: 2
+  groupRewardMultiplier: 1
   winConditionThreshold: 1
   debugDrawBoxHold: 1
   debugDrawVisibility: 1
