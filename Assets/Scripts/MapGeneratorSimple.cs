@@ -8,6 +8,11 @@ using Random = UnityEngine.Random;
 public class MapGeneratorSimple : MapGenerator
 {
     [SerializeField] private float mapSize = 20f;
+    [SerializeField] private GameObject wallPrefab = null;
+    [SerializeField] private Transform wallsParent = null;
+    [SerializeField] private float wallY = 1f;
+    [SerializeField] private float wallThickness = 0.25f;
+    [SerializeField] private GameObject floorGameObject = null;
 
     [Header("Agent placement")]
     // instantiateAgents must be on if agent count should be randomized every episode
@@ -33,12 +38,8 @@ public class MapGeneratorSimple : MapGenerator
 
     [Header("Subroom generation")]
     [SerializeField] private bool generateSubroom = false;
-    [SerializeField] private Transform wallsParent = null;
-    [SerializeField] private GameObject wallPrefab = null;
     [SerializeField] private float roomSize = 10f;
     [SerializeField] private float doorWidth = 2.5f;
-    [SerializeField] private float wallY = 1f;
-    [SerializeField] private float wallThickness = 0.25f;
 
 
     private const int numTriesAgent = 50;
@@ -75,6 +76,7 @@ public class MapGeneratorSimple : MapGenerator
 
         generatedWalls?.ForEach((GameObject wall) => Destroy(wall));
         generatedWalls = new List<GameObject>();
+        GenerateMainRoom();
 
         if (instantiateAgents)
         {
@@ -96,18 +98,37 @@ public class MapGeneratorSimple : MapGenerator
             }
         }
 
-
         if (generateSubroom)
         {
-            PlaceWalls(0f);
-            PlaceWalls(-90f);
+            PlaceSubroomWalls(0f);
+            PlaceSubroomWalls(-90f);
         }
 
         PlaceStuff();
     }
 
 
-    private void PlaceWalls(float rotation)
+    private void GenerateMainRoom()
+    {
+        floorGameObject.transform.localScale = new Vector3(mapSize * 0.1f, 1f, mapSize * 0.1f);
+
+        float sx = mapSize;
+        float sz = wallThickness;
+        Vector3 pos = new Vector3(0f, wallY, mapSize * 0.5f);
+        for (int i = 0; i < 4; i++)
+        {
+            GameObject wall = Instantiate(wallPrefab, pos + transform.position, Quaternion.identity, wallsParent);
+            wall.transform.localScale = new Vector3(sx, wall.transform.localScale.y, sz);
+
+            float tmp = sx;
+            sx = sz;
+            sz = tmp;
+
+            pos = Quaternion.AngleAxis(90f, Vector3.up) * pos;
+        }
+    }
+
+    private void PlaceSubroomWalls(float rotation)
     {
         Vector3 roomCenter = 0.5f * (mapSize - roomSize) * new Vector3(1f, 0f, -1f);
         float wallZ = -mapSize * 0.5f + roomSize;
