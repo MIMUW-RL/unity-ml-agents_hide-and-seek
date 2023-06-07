@@ -130,6 +130,28 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3030623365140921251, guid: 5850a9fcec6f834409278e7e80544811,
+        type: 3}
+      propertyPath: m_Model
+      value: 
+      objectReference: {fileID: 5022602860645237092, guid: 399e6c3cc6c1a5f43b075bf141826076,
+        type: 3}
+    - target: {fileID: 3030623365140921251, guid: 5850a9fcec6f834409278e7e80544811,
+        type: 3}
+      propertyPath: m_DeterministicInference
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3030623365906738474, guid: 5850a9fcec6f834409278e7e80544811,
+        type: 3}
+      propertyPath: m_Model
+      value: 
+      objectReference: {fileID: 5022602860645237092, guid: 399e6c3cc6c1a5f43b075bf141826076,
+        type: 3}
+    - target: {fileID: 3030623365906738474, guid: 5850a9fcec6f834409278e7e80544811,
+        type: 3}
+      propertyPath: m_DeterministicInference
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4262886925824644033, guid: 5850a9fcec6f834409278e7e80544811,
         type: 3}
       propertyPath: m_RootOrder
@@ -189,6 +211,28 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Platform (doubled, random)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6984170707625833817, guid: 5850a9fcec6f834409278e7e80544811,
+        type: 3}
+      propertyPath: m_Model
+      value: 
+      objectReference: {fileID: 5022602860645237092, guid: 399e6c3cc6c1a5f43b075bf141826076,
+        type: 3}
+    - target: {fileID: 6984170707625833817, guid: 5850a9fcec6f834409278e7e80544811,
+        type: 3}
+      propertyPath: m_DeterministicInference
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6984170708557529829, guid: 5850a9fcec6f834409278e7e80544811,
+        type: 3}
+      propertyPath: m_Model
+      value: 
+      objectReference: {fileID: 5022602860645237092, guid: 399e6c3cc6c1a5f43b075bf141826076,
+        type: 3}
+    - target: {fileID: 6984170708557529829, guid: 5850a9fcec6f834409278e7e80544811,
+        type: 3}
+      propertyPath: m_DeterministicInference
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5850a9fcec6f834409278e7e80544811, type: 3}
