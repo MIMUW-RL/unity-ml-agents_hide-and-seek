@@ -119,6 +119,7 @@ public class MapGeneratorSimple : MapGenerator
         {
             GameObject wall = Instantiate(wallPrefab, pos + transform.position, Quaternion.identity, wallsParent);
             wall.transform.localScale = new Vector3(sx, wall.transform.localScale.y, sz);
+            generatedWalls.Add(wall);
 
             float tmp = sx;
             sx = sz;
