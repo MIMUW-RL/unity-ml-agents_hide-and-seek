@@ -1,0 +1,126 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &110333789421086475
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1881455841911720016, guid: b7bca9156973d684d8b42df37b0120fc,
+        type: 3}
+      propertyPath: isHiding
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1881455841911720019, guid: b7bca9156973d684d8b42df37b0120fc,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 7e3a55461e5515442bde2867771f09fe, type: 2}
+    - target: {fileID: 1881455841911720022, guid: b7bca9156973d684d8b42df37b0120fc,
+        type: 3}
+      propertyPath: m_Name
+      value: Seeker
+      objectReference: {fileID: 0}
+    - target: {fileID: 1881455841911720023, guid: b7bca9156973d684d8b42df37b0120fc,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1881455841911720023, guid: b7bca9156973d684d8b42df37b0120fc,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1881455841911720023, guid: b7bca9156973d684d8b42df37b0120fc,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1881455841911720023, guid: b7bca9156973d684d8b42df37b0120fc,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1881455841911720023, guid: b7bca9156973d684d8b42df37b0120fc,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1881455841911720023, guid: b7bca9156973d684d8b42df37b0120fc,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1881455841911720023, guid: b7bca9156973d684d8b42df37b0120fc,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1881455841911720023, guid: b7bca9156973d684d8b42df37b0120fc,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1881455841911720023, guid: b7bca9156973d684d8b42df37b0120fc,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1881455841911720023, guid: b7bca9156973d684d8b42df37b0120fc,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1881455841911720023, guid: b7bca9156973d684d8b42df37b0120fc,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2493337983843415791, guid: b7bca9156973d684d8b42df37b0120fc,
+        type: 3}
+      propertyPath: m_SensorName
+      value: FrontSensorSeeker
+      objectReference: {fileID: 0}
+    - target: {fileID: 3626823193223142493, guid: b7bca9156973d684d8b42df37b0120fc,
+        type: 3}
+      propertyPath: m_Name
+      value: Front Sensor (Seeker)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5611945694481545745, guid: b7bca9156973d684d8b42df37b0120fc,
+        type: 3}
+      propertyPath: m_Name
+      value: Back Sensor (Hider)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6461877901281926791, guid: b7bca9156973d684d8b42df37b0120fc,
+        type: 3}
+      propertyPath: m_SensorName
+      value: BackSensorSeeker
+      objectReference: {fileID: 0}
+    - target: {fileID: 6887170102402265762, guid: b7bca9156973d684d8b42df37b0120fc,
+        type: 3}
+      propertyPath: m_Name
+      value: Front Sensor (Hider)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7920731599552111282, guid: b7bca9156973d684d8b42df37b0120fc,
+        type: 3}
+      propertyPath: m_SensorName
+      value: BackSensorHider
+      objectReference: {fileID: 0}
+    - target: {fileID: 7994813013572923130, guid: b7bca9156973d684d8b42df37b0120fc,
+        type: 3}
+      propertyPath: m_Name
+      value: Back Sensor (Seeker)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8750581795964370546, guid: b7bca9156973d684d8b42df37b0120fc,
+        type: 3}
+      propertyPath: m_SensorName
+      value: FrontSensorHider
+      objectReference: {fileID: 0}
+    - target: {fileID: 9081539010691202653, guid: b7bca9156973d684d8b42df37b0120fc,
+        type: 3}
+      propertyPath: TeamId
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: b7bca9156973d684d8b42df37b0120fc, type: 3}

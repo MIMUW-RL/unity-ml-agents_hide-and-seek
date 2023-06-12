@@ -274,7 +274,9 @@ MonoBehaviour:
   MaxStep: 2000
   agentActions: {fileID: 4598261876671290339}
   teamBufferSensor: {fileID: 9026272798846000910}
-  dummyRaycastSensor: {fileID: 6682294051711577537}
+  dummyRaycastSensors:
+  - {fileID: 6682294051711577537}
+  dummyRaycastSensorSizes: d2000000
 --- !u!114 &6612431404260404718
 MonoBehaviour:
   m_ObjectHideFlags: 0
