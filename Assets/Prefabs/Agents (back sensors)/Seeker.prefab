@@ -22,6 +22,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Seeker
       objectReference: {fileID: 0}
+    - target: {fileID: 1881455841911720022, guid: b7bca9156973d684d8b42df37b0120fc,
+        type: 3}
+      propertyPath: m_TagString
+      value: Seeker
+      objectReference: {fileID: 0}
     - target: {fileID: 1881455841911720023, guid: b7bca9156973d684d8b42df37b0120fc,
         type: 3}
       propertyPath: m_RootOrder
