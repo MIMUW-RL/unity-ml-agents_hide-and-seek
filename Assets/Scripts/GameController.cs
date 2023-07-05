@@ -35,6 +35,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private bool debugDrawBoxHold = true;
     [SerializeField] private bool debugDrawVisibility = true;
     [SerializeField] private bool debugDrawIndividualReward = true;
+    [SerializeField] private bool debugLogPlatformParams = true;
     [SerializeField] private bool debugLogMatchResult = false;
     [SerializeField] private TMPro.TextMeshProUGUI textMeshReward = null;
 
@@ -66,6 +67,17 @@ public class GameController : MonoBehaviour
 
     private void Start()
     {
+        if (debugLogPlatformParams)
+        {
+            System.Console.WriteLine(gameObject.name);
+            System.Console.WriteLine(JsonUtility.ToJson(this, true));
+            if (mapGenerator != null)
+            {
+                System.Console.WriteLine(JsonUtility.ToJson(mapGenerator, true));
+            }
+            System.Console.WriteLine();
+        }
+
         mapGenerator?.Generate();
 
         AgentActions[] allAgents = GetComponentsInChildren<AgentActions>();
