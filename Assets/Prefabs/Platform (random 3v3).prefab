@@ -240,7 +240,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed0df6566e826024995621ba77eeb448, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapSize: 20
+  mapSize: 25
   wallPrefab: {fileID: 6512431742182909049, guid: 3bb2a8ea6fb07474bad5f56678888b84,
     type: 3}
   wallsParent: {fileID: 8857862128266345544}
@@ -262,8 +262,8 @@ MonoBehaviour:
   instantiateBoxes: 1
   boxPrefabs:
   - {fileID: 35575987407354009, guid: 15956294e5d1be546a8d76204c1b82ef, type: 3}
-  numBoxesMin: 4
-  numBoxesMax: 6
+  numBoxesMin: 5
+  numBoxesMax: 7
   boxY: 1
   objectRadius: 1.5
   generateSubroom: 0
