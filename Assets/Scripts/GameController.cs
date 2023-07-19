@@ -129,6 +129,24 @@ public class GameController : MonoBehaviour
     {
         episodeTimer++;
 
+        Vector3 seekersMeanPosition = Vector2.zero;
+        foreach (AgentActions seeker in seekers)
+        {
+            seekersMeanPosition += seeker.transform.position - transform.position;
+        }
+        seekersMeanPosition /= seekers.Count;
+        statsRecorder.Add("Environment/SeekersMeanX", seekersMeanPosition.x);
+        statsRecorder.Add("Environment/SeekersMeanZ", seekersMeanPosition.z);
+
+        Vector3 hidersMeanPosition = Vector2.zero;
+        foreach (AgentActions hider in hiders)
+        {
+            hidersMeanPosition += hider.transform.position - transform.position;
+        }
+        hidersMeanPosition /= hiders.Count;
+        statsRecorder.Add("Environment/HidersMeanX", hidersMeanPosition.x);
+        statsRecorder.Add("Environment/HidersMeanZ", hidersMeanPosition.z);
+
         if (episodeTimer > episodeSteps)
         {
             float timeHidden = stepsHidden / (episodeSteps * (1f - gracePeriodFraction));
