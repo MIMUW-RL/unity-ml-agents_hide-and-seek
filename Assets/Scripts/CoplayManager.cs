@@ -44,7 +44,7 @@ public class CoplayManager : MonoBehaviour
         
         if (trainerStatusPath == null)
         {
-            Debug.LogError("No trainer_status env arg provided!");
+            Debug.LogWarning("No trainer_status env arg provided!");
         }
         else
         {
@@ -53,7 +53,7 @@ public class CoplayManager : MonoBehaviour
 
         if (modelsPath == null)
         {
-            Debug.LogError("No models_path evn arg provided!");
+            Debug.LogWarning("No models_path evn arg provided!");
         }
         else
         {
