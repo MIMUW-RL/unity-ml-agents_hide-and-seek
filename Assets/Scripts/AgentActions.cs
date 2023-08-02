@@ -1,3 +1,5 @@
+using Unity.Barracuda;
+using Unity.MLAgents.Policies;
 using UnityEngine;
 
 public class AgentActions : MonoBehaviour
@@ -19,6 +21,8 @@ public class AgentActions : MonoBehaviour
     private BoxHolding grabbedBox;
     private Quaternion targetRelativeRotation;
 
+    private BehaviorParameters behaviorParameters = null;
+
     public Rigidbody Rigidbody { get { return rigidbody; } }
     
     public bool IsHiding { get { return isHiding; } }
@@ -30,6 +34,7 @@ public class AgentActions : MonoBehaviour
 
     private void Start()
     {
+        behaviorParameters = GetComponent<BehaviorParameters>();
         startPosition = transform.position;
         startRotation = transform.rotation;
     }
@@ -155,6 +160,23 @@ public class AgentActions : MonoBehaviour
         rigidbody.velocity = Vector3.zero;
         rigidbody.angularVelocity = Vector3.zero;
         grabbedBox = null;
+    }
+
+    public void SwitchToTraining()
+    {
+        behaviorParameters.BehaviorType = BehaviorType.Default;
+        behaviorParameters.Model = null;
+    }
+
+    public void SwitchToInference(NNModel model)
+    {
+        if (model == null)
+        {
+            return;
+        }
+
+        behaviorParameters.BehaviorType = BehaviorType.InferenceOnly;
+        behaviorParameters.Model = model;
     }
 
 

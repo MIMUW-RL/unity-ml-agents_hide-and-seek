@@ -1,7 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.MLAgents;
+using Unity.MLAgents.Policies;
 using UnityEngine;
 
 public class GameController : MonoBehaviour
@@ -30,6 +30,11 @@ public class GameController : MonoBehaviour
     [SerializeField] private GroupRewardType groupRewardType = GroupRewardType.None;
     [SerializeField] private float groupRewardMultiplier = 1.0f;
     [SerializeField] private float winConditionThreshold = 1.0f;
+
+    [Header("Coplay")]
+    [SerializeField] private bool useCoplay = false;
+    [SerializeField] private int numberOfCoplayAgents = 1;
+    [SerializeField] private float selfPlayRatio = 0.5f;
 
     [Header("Debug")]
     [SerializeField] private bool debugDrawBoxHold = true;
@@ -81,7 +86,7 @@ public class GameController : MonoBehaviour
         mapGenerator?.Generate();
 
         AgentActions[] allAgents = GetComponentsInChildren<AgentActions>();
-        Array.ForEach(allAgents, (AgentActions agent) => agent.GameController = this);
+        System.Array.ForEach(allAgents, (AgentActions agent) => agent.GameController = this);
         hiders = allAgents.Where((AgentActions a) => a.IsHiding).ToList();
         seekers = allAgents.Where((AgentActions a) => !a.IsHiding).ToList();
         visibilityMatrix = new bool[hiders.Count, seekers.Count];
@@ -129,7 +134,7 @@ public class GameController : MonoBehaviour
     {
         episodeTimer++;
 
-        Vector3 seekersMeanPosition = Vector2.zero;
+        Vector3 seekersMeanPosition = Vector3.zero;
         foreach (AgentActions seeker in seekers)
         {
             seekersMeanPosition += seeker.transform.position - transform.position;
@@ -138,7 +143,7 @@ public class GameController : MonoBehaviour
         statsRecorder.Add("Environment/SeekersMeanX", seekersMeanPosition.x);
         statsRecorder.Add("Environment/SeekersMeanZ", seekersMeanPosition.z);
 
-        Vector3 hidersMeanPosition = Vector2.zero;
+        Vector3 hidersMeanPosition = Vector3.zero;
         foreach (AgentActions hider in hiders)
         {
             hidersMeanPosition += hider.transform.position - transform.position;
@@ -332,6 +337,27 @@ public class GameController : MonoBehaviour
                 for (int j = 0; j < visibilityMatrix.GetLength(1); j++)
                 {
                     visibilityMatrix[i, j] = false;
+                }
+            }
+        }
+
+        if (useCoplay)
+        {
+            CoplayManager.Instance.Rescan();
+            foreach (AgentActions agent in hiders)
+            {
+                agent.SwitchToTraining();
+            }
+            foreach (AgentActions agent in seekers)
+            {
+                agent.SwitchToTraining();
+            }
+
+            if (Random.Range(0f, 1f) < selfPlayRatio)
+            {
+                for (int i = 0; i < numberOfCoplayAgents; i++)
+                {
+                    (CoplayManager.TrainedTeamID == 0 ? hiders[i] : seekers[i]).SwitchToInference(CoplayManager.Instance.GetRandomModel());
                 }
             }
         }
