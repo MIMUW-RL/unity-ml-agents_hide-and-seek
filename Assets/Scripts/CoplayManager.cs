@@ -77,6 +77,7 @@ public class CoplayManager : MonoBehaviour
         }
 
         string[] files = Directory.GetFiles(modelsPath, "*.onnx");
+        bool appendedNew = false;
         foreach (string file in files)
         {
             if (!checkpointNames.Contains(file))
@@ -97,7 +98,10 @@ public class CoplayManager : MonoBehaviour
                 model.modelData.hideFlags = HideFlags.HideInHierarchy;
                 model.modelData.name = "Data";
                 model.name = file;
-
+                Debug.Log("Found new model in modelPath, appending to checkpoints");
+                Debug.Log(file);
+                Debug.Log(string.Concat("checkpoints size = ", checkpoints.Count));
+                appendedNew = true;
                 checkpoints.Add(model);
             }
         }

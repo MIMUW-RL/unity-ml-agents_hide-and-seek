@@ -223,9 +223,13 @@ MonoBehaviour:
   groupRewardType: 2
   groupRewardMultiplier: 1
   winConditionThreshold: 1
+  useCoplay: 1
+  numberOfCoplayAgents: 1
+  selfPlayRatio: 0.5
   debugDrawBoxHold: 1
   debugDrawVisibility: 1
   debugDrawIndividualReward: 1
+  debugLogPlatformParams: 1
   debugLogMatchResult: 0
   textMeshReward: {fileID: 0}
 --- !u!114 &8857862129424821076
