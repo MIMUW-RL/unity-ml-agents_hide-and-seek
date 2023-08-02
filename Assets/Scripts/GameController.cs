@@ -359,11 +359,13 @@ public class GameController : MonoBehaviour
                 for (int i = 0; i < numberOfCoplayAgents; i++)
                 {
                     NNModel model = CoplayManager.Instance.GetRandomModel();
-                    (CoplayManager.TrainedTeamID == 0 ? hiders[i] : seekers[i]).SwitchToInference(model);
-                    Debug.Log(gameObject.name + " setting agent with id=" + i + " in team" + CoplayManager.TrainedTeamID + " to model=" + model.name.Split("/").Last());
+                    if(model is not null){
+                        (CoplayManager.TrainedTeamID == 0 ? hiders[i] : seekers[i]).SwitchToInference(model);
+                        Debug.Log(gameObject.name.Split(' ').Last() + " set agent " + i + " (team" + CoplayManager.TrainedTeamID + ") model=" + model.name.Split("/").Last());
+                    }
                 }
             }else{
-                Debug.Log(gameObject.name + " not using coplay for team" + CoplayManager.TrainedTeamID);
+                //Debug.Log(gameObject.name + " not using coplay for team" + CoplayManager.TrainedTeamID);
             }
         }
     }
