@@ -166,6 +166,7 @@ public class AgentActions : MonoBehaviour
     {
         behaviorParameters.BehaviorType = BehaviorType.Default;
         behaviorParameters.Model = null;
+        behaviorParameters.DeterministicInference = false;
     }
 
     public void SwitchToInference(NNModel model)
@@ -175,8 +176,9 @@ public class AgentActions : MonoBehaviour
             return;
         }
 
-        behaviorParameters.BehaviorType = BehaviorType.InferenceOnly;
         behaviorParameters.Model = model;
+        behaviorParameters.BehaviorType = BehaviorType.InferenceOnly;
+        behaviorParameters.DeterministicInference = true;
     }
 
 

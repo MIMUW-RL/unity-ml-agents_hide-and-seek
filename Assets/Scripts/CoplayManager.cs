@@ -95,8 +95,9 @@ public class CoplayManager : MonoBehaviour
                     }
                 }
                 model.modelData.hideFlags = HideFlags.HideInHierarchy;
-                model.modelData.name = file;
-                Debug.Log(model);
+                model.modelData.name = "Data";
+                model.name = file;
+
                 checkpoints.Add(model);
             }
         }
@@ -104,7 +105,6 @@ public class CoplayManager : MonoBehaviour
 
     public NNModel GetRandomModel()
     {
-        Debug.Log(checkpoints.Count);
         if (checkpoints.Count > 0)
         {
             return checkpoints[Random.Range(0, checkpoints.Count)];

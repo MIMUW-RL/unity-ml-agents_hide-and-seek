@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Barracuda;
 using Unity.MLAgents;
 using Unity.MLAgents.Policies;
 using UnityEngine;
@@ -357,7 +358,8 @@ public class GameController : MonoBehaviour
             {
                 for (int i = 0; i < numberOfCoplayAgents; i++)
                 {
-                    (CoplayManager.TrainedTeamID == 0 ? hiders[i] : seekers[i]).SwitchToInference(CoplayManager.Instance.GetRandomModel());
+                    NNModel model = CoplayManager.Instance.GetRandomModel();
+                    (CoplayManager.TrainedTeamID == 0 ? hiders[i] : seekers[i]).SwitchToInference(model);
                 }
             }
         }
