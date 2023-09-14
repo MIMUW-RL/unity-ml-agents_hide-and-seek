@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using Unity.Barracuda;
@@ -12,8 +11,6 @@ public class CoplayManager : MonoBehaviour
 
     public static int TrainedTeamID { get; private set; } = 0;
 
-    private string trainerStatusPath = null;
-    private string modelsPath = null;
     private List<NNModel> checkpoints = null;
     private HashSet<string> checkpointNames = null;
 
@@ -29,35 +26,23 @@ public class CoplayManager : MonoBehaviour
         {
             Instance = this;
         }
-
-        foreach (string arg in System.Environment.GetCommandLineArgs())
-        {
-            if (arg.StartsWith("trainer_status="))
-            {
-                trainerStatusPath = arg[15..];
-            }
-            if (arg.StartsWith("models_path="))
-            {
-                modelsPath = arg[12..];
-            }
-        }
         
-        if (trainerStatusPath == null)
+        if (SystemArgs.TrainerStatusPath == null)
         {
             Debug.LogWarning("No trainer_status env arg provided!");
         }
         else
         {
-            Debug.Log("trainer_status: " + trainerStatusPath);
+            Debug.Log("trainer_status: " + SystemArgs.TrainerStatusPath);
         }
 
-        if (modelsPath == null)
+        if (SystemArgs.ModelsPath == null)
         {
             Debug.LogWarning("No models_path evn arg provided!");
         }
         else
         {
-            Debug.Log("models_path: " + modelsPath);
+            Debug.Log("models_path: " + SystemArgs.ModelsPath);
         }
 
         checkpoints = new List<NNModel>();
@@ -67,7 +52,7 @@ public class CoplayManager : MonoBehaviour
 
     public void Rescan()
     {
-        string[] trainerStatusData = File.ReadAllLines(trainerStatusPath);
+        string[] trainerStatusData = File.ReadAllLines(SystemArgs.TrainerStatusPath);
         foreach (string line in trainerStatusData)
         {
             if (line.StartsWith("learningTeamId: "))
@@ -76,7 +61,7 @@ public class CoplayManager : MonoBehaviour
             }
         }
 
-        string[] files = Directory.GetFiles(modelsPath, "*.onnx");
+        string[] files = Directory.GetFiles(SystemArgs.ModelsPath, "*.onnx");
         foreach (string file in files)
         {
             if (!checkpointNames.Contains(file))

@@ -1,8 +1,8 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Unity.Barracuda;
 using Unity.MLAgents;
-using Unity.MLAgents.Policies;
 using UnityEngine;
 
 public class GameController : MonoBehaviour
@@ -70,6 +70,15 @@ public class GameController : MonoBehaviour
     public bool DebugLogMatchResult => debugLogMatchResult;
 
 
+    private void Awake()
+    {
+        if (SystemArgs.GameParamsPath != null)
+        {
+            Debug.Log("Game controller configuration file: " + SystemArgs.GameParamsPath);
+            string content = File.ReadAllText(SystemArgs.GameParamsPath);
+            JsonUtility.FromJsonOverwrite(content, this);
+        }
+    }
 
     private void Start()
     {

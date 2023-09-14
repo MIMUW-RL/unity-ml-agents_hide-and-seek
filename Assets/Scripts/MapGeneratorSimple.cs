@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -56,6 +57,15 @@ public class MapGeneratorSimple : MapGenerator
     public List<AgentActions> GetInstantiatedSeekers() => instantiateAgents ? seekers.ToList() : new List<AgentActions>();
 
 
+    private void Awake()
+    {
+        if (SystemArgs.ArenaParamsPath != null)
+        {
+            Debug.Log("Arena generation configuration file: " + SystemArgs.ArenaParamsPath);
+            string content = File.ReadAllText(SystemArgs.ArenaParamsPath);
+            JsonUtility.FromJsonOverwrite(content, this);
+        }
+    }
 
     public override void Generate()
     {
