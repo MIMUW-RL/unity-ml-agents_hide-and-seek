@@ -28,6 +28,8 @@ public class GameController : MonoBehaviour
     [Header("Rewards")]
     [SerializeField] private IndividualRewardType individualRewardType = IndividualRewardType.None;
     [SerializeField] private float individualRewardMultiplier = 1.0f;
+    [SerializeField] private float arenaSize = 20f;
+    [SerializeField] private float oobPenalty = 0.0f;
     [SerializeField] private GroupRewardType groupRewardType = GroupRewardType.None;
     [SerializeField] private float groupRewardMultiplier = 1.0f;
     [SerializeField] private float winConditionThreshold = 1.0f;
@@ -243,54 +245,11 @@ public class GameController : MonoBehaviour
 
     public float GetIndividualReward(AgentActions agent)
     {
-        if (!GracePeriodEnded)
-        {
-            return 0;
-        }
-
-        if (individualRewardType == IndividualRewardType.None)
-        {
-            return 0;
-        }
-        if (individualRewardType == IndividualRewardType.Team)
-        {
-            return AreAllHidersHidden() == agent.IsHiding
-                ?  individualRewardMultiplier
-                : -individualRewardMultiplier;
-        }
-
-        for (int i = 0; i < hiders.Count; i++)
-        {
-            if (agent.GetInstanceID() == hiders[i].GetInstanceID())
-            {
-                for (int j = 0; j < seekers.Count; j++)
-                {
-                    if (visibilityMatrix[i, j])
-                    {
-                        return -individualRewardMultiplier;
-                    }
-                }
-                return individualRewardMultiplier;
-            }
-        }
-
-        for (int j = 0; j < seekers.Count; j++)
-        {
-            if (agent.GetInstanceID() == seekers[j].GetInstanceID())
-            {
-                for (int i = 0; i < hiders.Count; i++)
-                {
-                    if (visibilityMatrix[i, j])
-                    {
-                        return individualRewardMultiplier;
-                    }
-                }
-                return -individualRewardMultiplier;
-            }
-        }
-
-        return 0;
+        bool isOoB = Mathf.Max(Mathf.Abs(agent.transform.position.x - transform.position.x),
+                               Mathf.Abs(agent.transform.position.z - transform.position.z)) > arenaSize * 0.5f;
+        return GetIndividualRewardMain(agent) - (isOoB ? oobPenalty : 0.0f);
     }
+
 
     public void ResetScene()
     {
@@ -374,6 +333,57 @@ public class GameController : MonoBehaviour
         }
     }
 
+
+    private float GetIndividualRewardMain(AgentActions agent)
+    {
+        if (!GracePeriodEnded)
+        {
+            return 0;
+        }
+
+        if (individualRewardType == IndividualRewardType.None)
+        {
+            return 0;
+        }
+        if (individualRewardType == IndividualRewardType.Team)
+        {
+            return AreAllHidersHidden() == agent.IsHiding
+                ? individualRewardMultiplier
+                : -individualRewardMultiplier;
+        }
+
+        for (int i = 0; i < hiders.Count; i++)
+        {
+            if (agent.GetInstanceID() == hiders[i].GetInstanceID())
+            {
+                for (int j = 0; j < seekers.Count; j++)
+                {
+                    if (visibilityMatrix[i, j])
+                    {
+                        return -individualRewardMultiplier;
+                    }
+                }
+                return individualRewardMultiplier;
+            }
+        }
+
+        for (int j = 0; j < seekers.Count; j++)
+        {
+            if (agent.GetInstanceID() == seekers[j].GetInstanceID())
+            {
+                for (int i = 0; i < hiders.Count; i++)
+                {
+                    if (visibilityMatrix[i, j])
+                    {
+                        return individualRewardMultiplier;
+                    }
+                }
+                return -individualRewardMultiplier;
+            }
+        }
+
+        return 0;
+    }
 
     private void FillVisibilityMatrix()
     {

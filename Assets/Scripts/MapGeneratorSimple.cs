@@ -8,11 +8,12 @@ using Random = UnityEngine.Random;
 
 public class MapGeneratorSimple : MapGenerator
 {
-    [SerializeField] private float mapSize = 20f;
+    [SerializeField] private float mapSize = 20f; // controls where objects are randomized
     [SerializeField] private GameObject wallPrefab = null;
     [SerializeField] private Transform wallsParent = null;
     [SerializeField] private float wallY = 1f;
     [SerializeField] private float wallThickness = 0.25f;
+    [SerializeField] private float wallsPosition = 0f; // if equal to 0, then mapSize value is used instead
     [SerializeField] private GameObject floorGameObject = null;
 
     [Header("Agent placement")]
@@ -120,11 +121,12 @@ public class MapGeneratorSimple : MapGenerator
 
     private void GenerateMainRoom()
     {
-        floorGameObject.transform.localScale = new Vector3(mapSize * 0.1f, 1f, mapSize * 0.1f);
+        float size = wallsPosition == 0f ? mapSize : wallsPosition;
 
-        float sx = mapSize;
+        floorGameObject.transform.localScale = new Vector3(size * 0.1f, 1f, size * 0.1f);
+        float sx = size;
         float sz = wallThickness;
-        Vector3 pos = new Vector3(0f, wallY, mapSize * 0.5f);
+        Vector3 pos = new Vector3(0f, wallY, size * 0.5f);
         for (int i = 0; i < 4; i++)
         {
             GameObject wall = Instantiate(wallPrefab, pos + transform.position, Quaternion.identity, wallsParent);
