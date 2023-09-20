@@ -499,7 +499,7 @@ PrefabInstance:
     - target: {fileID: 4262886925824644033, guid: 5850a9fcec6f834409278e7e80544811,
         type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 4262886925824644033, guid: 5850a9fcec6f834409278e7e80544811,
         type: 3}
@@ -509,12 +509,12 @@ PrefabInstance:
     - target: {fileID: 4262886925824644033, guid: 5850a9fcec6f834409278e7e80544811,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -40
       objectReference: {fileID: 0}
     - target: {fileID: 4262886925824644033, guid: 5850a9fcec6f834409278e7e80544811,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -30
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4262886925824644033, guid: 5850a9fcec6f834409278e7e80544811,
         type: 3}
@@ -573,17 +573,17 @@ PrefabInstance:
     - target: {fileID: 4262886925824644033, guid: 5850a9fcec6f834409278e7e80544811,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 30
-      objectReference: {fileID: 0}
-    - target: {fileID: 4262886925824644033, guid: 5850a9fcec6f834409278e7e80544811,
-        type: 3}
-      propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4262886925824644033, guid: 5850a9fcec6f834409278e7e80544811,
         type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -50
+      objectReference: {fileID: 0}
+    - target: {fileID: 4262886925824644033, guid: 5850a9fcec6f834409278e7e80544811,
+        type: 3}
       propertyPath: m_LocalPosition.z
-      value: -30
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4262886925824644033, guid: 5850a9fcec6f834409278e7e80544811,
         type: 3}
@@ -681,22 +681,22 @@ PrefabInstance:
     - target: {fileID: 4262886925824644033, guid: 5850a9fcec6f834409278e7e80544811,
         type: 3}
       propertyPath: m_RootOrder
-      value: 8
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 4262886925824644033, guid: 5850a9fcec6f834409278e7e80544811,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -30
-      objectReference: {fileID: 0}
-    - target: {fileID: 4262886925824644033, guid: 5850a9fcec6f834409278e7e80544811,
-        type: 3}
-      propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4262886925824644033, guid: 5850a9fcec6f834409278e7e80544811,
         type: 3}
-      propertyPath: m_LocalPosition.z
+      propertyPath: m_LocalPosition.y
       value: -30
+      objectReference: {fileID: 0}
+    - target: {fileID: 4262886925824644033, guid: 5850a9fcec6f834409278e7e80544811,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4262886925824644033, guid: 5850a9fcec6f834409278e7e80544811,
         type: 3}
@@ -919,12 +919,12 @@ PrefabInstance:
     - target: {fileID: 4262886925824644033, guid: 5850a9fcec6f834409278e7e80544811,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -30
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4262886925824644033, guid: 5850a9fcec6f834409278e7e80544811,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 4262886925824644033, guid: 5850a9fcec6f834409278e7e80544811,
         type: 3}
@@ -1089,12 +1089,12 @@ PrefabInstance:
     - target: {fileID: 4262886925824644033, guid: 5850a9fcec6f834409278e7e80544811,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 30
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4262886925824644033, guid: 5850a9fcec6f834409278e7e80544811,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -20
       objectReference: {fileID: 0}
     - target: {fileID: 4262886925824644033, guid: 5850a9fcec6f834409278e7e80544811,
         type: 3}

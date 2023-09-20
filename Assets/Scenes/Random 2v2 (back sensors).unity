@@ -317,22 +317,22 @@ PrefabInstance:
     - target: {fileID: 6148048907028040939, guid: 9fd44705ab7c7d3459bc04cf4cb499d2,
         type: 3}
       propertyPath: m_RootOrder
-      value: 8
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 6148048907028040939, guid: 9fd44705ab7c7d3459bc04cf4cb499d2,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -30
-      objectReference: {fileID: 0}
-    - target: {fileID: 6148048907028040939, guid: 9fd44705ab7c7d3459bc04cf4cb499d2,
-        type: 3}
-      propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6148048907028040939, guid: 9fd44705ab7c7d3459bc04cf4cb499d2,
         type: 3}
-      propertyPath: m_LocalPosition.z
+      propertyPath: m_LocalPosition.y
       value: -30
+      objectReference: {fileID: 0}
+    - target: {fileID: 6148048907028040939, guid: 9fd44705ab7c7d3459bc04cf4cb499d2,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6148048907028040939, guid: 9fd44705ab7c7d3459bc04cf4cb499d2,
         type: 3}
@@ -391,12 +391,12 @@ PrefabInstance:
     - target: {fileID: 6148048907028040939, guid: 9fd44705ab7c7d3459bc04cf4cb499d2,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 30
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6148048907028040939, guid: 9fd44705ab7c7d3459bc04cf4cb499d2,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -20
       objectReference: {fileID: 0}
     - target: {fileID: 6148048907028040939, guid: 9fd44705ab7c7d3459bc04cf4cb499d2,
         type: 3}
@@ -455,7 +455,7 @@ PrefabInstance:
     - target: {fileID: 6148048907028040939, guid: 9fd44705ab7c7d3459bc04cf4cb499d2,
         type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 6148048907028040939, guid: 9fd44705ab7c7d3459bc04cf4cb499d2,
         type: 3}
@@ -465,12 +465,12 @@ PrefabInstance:
     - target: {fileID: 6148048907028040939, guid: 9fd44705ab7c7d3459bc04cf4cb499d2,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -40
       objectReference: {fileID: 0}
     - target: {fileID: 6148048907028040939, guid: 9fd44705ab7c7d3459bc04cf4cb499d2,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -30
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6148048907028040939, guid: 9fd44705ab7c7d3459bc04cf4cb499d2,
         type: 3}
@@ -529,17 +529,17 @@ PrefabInstance:
     - target: {fileID: 6148048907028040939, guid: 9fd44705ab7c7d3459bc04cf4cb499d2,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 30
-      objectReference: {fileID: 0}
-    - target: {fileID: 6148048907028040939, guid: 9fd44705ab7c7d3459bc04cf4cb499d2,
-        type: 3}
-      propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6148048907028040939, guid: 9fd44705ab7c7d3459bc04cf4cb499d2,
         type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -50
+      objectReference: {fileID: 0}
+    - target: {fileID: 6148048907028040939, guid: 9fd44705ab7c7d3459bc04cf4cb499d2,
+        type: 3}
       propertyPath: m_LocalPosition.z
-      value: -30
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6148048907028040939, guid: 9fd44705ab7c7d3459bc04cf4cb499d2,
         type: 3}
@@ -866,12 +866,12 @@ PrefabInstance:
     - target: {fileID: 6148048907028040939, guid: 9fd44705ab7c7d3459bc04cf4cb499d2,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -30
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6148048907028040939, guid: 9fd44705ab7c7d3459bc04cf4cb499d2,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 6148048907028040939, guid: 9fd44705ab7c7d3459bc04cf4cb499d2,
         type: 3}

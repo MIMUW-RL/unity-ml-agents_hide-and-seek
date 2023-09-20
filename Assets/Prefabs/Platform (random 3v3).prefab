@@ -220,12 +220,18 @@ MonoBehaviour:
   mapGenerator: {fileID: 8857862129424821076}
   individualRewardType: 2
   individualRewardMultiplier: 0.004
+  arenaSize: 25
+  oobPenalty: 0
   groupRewardType: 2
   groupRewardMultiplier: 1
   winConditionThreshold: 1
+  useCoplay: 0
+  numberOfCoplayAgents: 1
+  selfPlayRatio: 0.5
   debugDrawBoxHold: 1
   debugDrawVisibility: 1
   debugDrawIndividualReward: 1
+  debugLogPlatformParams: 1
   debugLogMatchResult: 0
   textMeshReward: {fileID: 0}
 --- !u!114 &8857862129424821076
@@ -246,6 +252,7 @@ MonoBehaviour:
   wallsParent: {fileID: 8857862128266345544}
   wallY: 1
   wallThickness: 0.25
+  wallsPosition: 0
   floorGameObject: {fileID: 8857862127509773718}
   instantiateAgents: 0
   agentParent: {fileID: 8857862128308713854}
