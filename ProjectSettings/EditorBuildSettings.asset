@@ -6,8 +6,8 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SimpleRandom (Doubled).unity
-    guid: 8c3d03c37ee78c243acfaf627b6f6027
+    path: Assets/Scenes/Random 3v3.unity
+    guid: 67d4fcc0e6c16be47b280ee33e9029f9
   m_configObjects:
     com.unity.ml-agents.settings: {fileID: 11400000, guid: 056b9bab60a1c2b44a3a0207ac7e502a,
       type: 2}

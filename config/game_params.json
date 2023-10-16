@@ -1,0 +1,23 @@
+{
+    "episodeSteps": 500,
+    "gracePeriodFraction": 0.4000000059604645,
+    "coneAngle": 67.5,
+
+    "individualRewardType": 2,
+    "individualRewardMultiplier": 0.004000000189989805,
+    "arenaSize": 25.0,
+    "oobPenalty": 0.0,
+    "groupRewardType": 2,
+    "groupRewardMultiplier": 1.0,
+    "winConditionThreshold": 1.0,
+
+    "useCoplay": false,
+    "numberOfCoplayAgents": 1,
+    "selfPlayRatio": 0.5,
+
+    "debugDrawBoxHold": true,
+    "debugDrawVisibility": true,
+    "debugDrawIndividualReward": true,
+    "debugLogPlatformParams": true,
+    "debugLogMatchResult": false
+}

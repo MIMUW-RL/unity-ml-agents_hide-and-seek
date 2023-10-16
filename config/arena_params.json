@@ -1,0 +1,24 @@
+{
+    "mapSize": 25.0,
+    "wallY": 1.0,
+    "wallThickness": 0.25,
+    "wallsPosition": 0.0,
+
+    "instantiateAgents": false,
+    "numHidersMin": 2,
+    "numHidersMax": 3,
+    "numSeekersMin": 2,
+    "numSeekersMax": 3,
+    "agentY": 1.0,
+    "agentRadius": 0.75,
+
+    "instantiateBoxes": true,
+    "numBoxesMin": 6,
+    "numBoxesMax": 8,
+    "boxY": 1.0,
+    "objectRadius": 1.5,
+
+    "generateSubroom": false,
+    "roomSize": 10.0,
+    "doorWidth": 2.5
+}
