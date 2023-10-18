@@ -34,6 +34,10 @@ public class GameController : MonoBehaviour
     [SerializeField] private float groupRewardMultiplier = 1.0f;
     [SerializeField] private float winConditionThreshold = 1.0f;
 
+    [SerializeField] private bool allowCapture = false;
+    [SerializeField] private float captureDistance = 1.2f;
+    [SerializeField] private float captureReward = 0.5f;
+
     [Header("Coplay")]
     [SerializeField] private bool useCoplay = false;
     [SerializeField] private int numberOfCoplayAgents = 1;
@@ -57,6 +61,8 @@ public class GameController : MonoBehaviour
     private List<BoxHolding> holdObjects;
 
     private int stepsHidden = 0;
+    private int hidersCaptured = 0;
+    private float[] additionalReward = null;
     private bool hidersPerfectGame = true;
     private StatsRecorder statsRecorder = null;
 
@@ -103,6 +109,7 @@ public class GameController : MonoBehaviour
         seekers = allAgents.Where((AgentActions a) => !a.IsHiding).ToList();
         visibilityMatrix = new bool[hiders.Count, seekers.Count];
         holdObjects = FindObjectsOfType<BoxHolding>().ToList();
+        additionalReward = new float[seekers.Count];
 
         hidersGroup = new SimpleMultiAgentGroup();
         foreach (AgentActions hider in hiders)
@@ -188,7 +195,7 @@ public class GameController : MonoBehaviour
         else if (GracePeriodEnded)
         {
             FillVisibilityMatrix();
-            HidersGroupReward = AreAllHidersHidden() ? 1 : -1;
+            HidersGroupReward = hidersCaptured == hiders.Count() ? 0 : AreAllHidersHidden() ? 1 : -1;
             stepsHidden += HidersGroupReward > 0 ? 1 : 0;
             if (HidersGroupReward < 0)
             {
@@ -198,6 +205,23 @@ public class GameController : MonoBehaviour
             {
                 hidersGroup.AddGroupReward(HidersGroupReward * groupRewardMultiplier);
                 seekersGroup.AddGroupReward(-HidersGroupReward * groupRewardMultiplier);
+            }
+
+            if (allowCapture)
+            {
+                for (int i = 0; i < seekers.Count; i++)
+                {
+                    for (int j = 0; j < hiders.Count; j++)
+                    {
+                        if (!hiders[j].WasCaptured && Vector3.Distance(seekers[i].transform.position, hiders[j].transform.position) < captureDistance)
+                        {
+                            hiders[j].WasCaptured = true;
+                            hiders[j].gameObject.SetActive(false);
+                            hidersCaptured++;
+                            additionalReward[i] += captureReward;
+                        }
+                    }
+                }
             }
         }
         else
@@ -245,9 +269,34 @@ public class GameController : MonoBehaviour
 
     public float GetIndividualReward(AgentActions agent)
     {
+        if (agent.WasCaptured)
+        {
+            return 0f;
+        }
+
+        float reward = 0f;
+        if (hidersCaptured != hiders.Count)
+        {
+            reward += GetIndividualRewardMain(agent);
+        }
+
         bool isOoB = Mathf.Max(Mathf.Abs(agent.transform.position.x - transform.position.x),
                                Mathf.Abs(agent.transform.position.z - transform.position.z)) > arenaSize * 0.5f;
-        return GetIndividualRewardMain(agent) - (isOoB ? oobPenalty : 0.0f);
+        reward -= isOoB ? oobPenalty : 0.0f;
+
+        if (!agent.IsHiding)
+        {
+            for (int i = 0; i < seekers.Count; i++)
+            {
+                if (seekers[i].GetInstanceID() == agent.GetInstanceID())
+                {
+                    reward += additionalReward[i];
+                    additionalReward[i] = 0f;
+                }
+            }
+        }
+
+        return reward;
     }
 
 
@@ -255,6 +304,7 @@ public class GameController : MonoBehaviour
     {
         stepsHidden = 0;
         hidersPerfectGame = true;
+        hidersCaptured = 0;
         HidersGroupReward = 0;
         episodeTimer = 0;
         if (mapGenerator == null || !mapGenerator.InstantiatesAgentsOnReset())
@@ -286,6 +336,7 @@ public class GameController : MonoBehaviour
             hiders.ForEach((AgentActions agent) => agent.GameController = this);
             seekers.ForEach((AgentActions agent) => agent.GameController = this);
             visibilityMatrix = new bool[hiders.Count, seekers.Count];
+            additionalReward = new float[seekers.Count];
 
             hidersGroup = new SimpleMultiAgentGroup();
             foreach (AgentActions hider in hiders)
@@ -307,6 +358,10 @@ public class GameController : MonoBehaviour
                 {
                     visibilityMatrix[i, j] = false;
                 }
+            }
+            for (int i = 0; i < seekers.Count; i++)
+            {
+                additionalReward[i] = 0f;
             }
         }
 

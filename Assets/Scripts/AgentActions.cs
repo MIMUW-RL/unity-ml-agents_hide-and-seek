@@ -28,6 +28,7 @@ public class AgentActions : MonoBehaviour
     public bool IsHiding { get { return isHiding; } }
 
     public bool IsHolding { get { return grabbedBox != null; } }
+    public bool WasCaptured { get; set; } = false;
 
     public GameController GameController { get; set; }
 
@@ -41,7 +42,7 @@ public class AgentActions : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (isHiding || GameController.GracePeriodEnded)
+        if (!WasCaptured && (isHiding || GameController.GracePeriodEnded))
         {
             Movement();
         }
@@ -160,6 +161,8 @@ public class AgentActions : MonoBehaviour
         rigidbody.velocity = Vector3.zero;
         rigidbody.angularVelocity = Vector3.zero;
         grabbedBox = null;
+        WasCaptured = false;
+        gameObject.SetActive(true);
     }
 
     public void SwitchToTraining()

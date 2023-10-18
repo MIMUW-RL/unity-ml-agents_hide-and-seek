@@ -15,11 +15,12 @@ public class HideAndSeekAgent : Agent
     {
         Vector3 platformCenter = agentActions.GameController.transform.position;
 
-        // self -- 8 floats
+        // self -- 9 floats
         sensor.AddObservation(transform.position - platformCenter);
         sensor.AddObservation(NormalizeAngle(transform.rotation.eulerAngles.y));
         sensor.AddObservation(agentActions.Rigidbody.velocity);
         sensor.AddObservation(agentActions.IsHiding);
+        sensor.AddObservation(agentActions.WasCaptured);
 
         IEnumerable<AgentActions> teamAgents = agentActions.IsHiding
                                              ? agentActions.GameController.GetHiders()
@@ -29,7 +30,7 @@ public class HideAndSeekAgent : Agent
         {
             if (teamAgent != agentActions)
             {
-                float[] obs = new float[7];
+                float[] obs = new float[8];
                 Vector3 teamAgentPosition = teamAgent.transform.position - platformCenter;
                 obs[0] = teamAgentPosition.x;
                 obs[1] = teamAgentPosition.y;
@@ -38,6 +39,7 @@ public class HideAndSeekAgent : Agent
                 obs[4] = teamAgent.Rigidbody.velocity.x;
                 obs[5] = teamAgent.Rigidbody.velocity.y;
                 obs[6] = teamAgent.Rigidbody.velocity.z;
+                obs[7] = teamAgent.WasCaptured ? 1.0f : 0.0f;
 
                 teamBufferSensor.AppendObservation(obs);
             }
