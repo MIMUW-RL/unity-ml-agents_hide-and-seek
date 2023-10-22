@@ -79,7 +79,7 @@ public class HideAndSeekAgent : Agent
             agentActions.LockBox(false);
         }
 
-        float reward = agentActions.GameController.GetIndividualReward(agentActions);
+        float reward = agentActions.GameController.CollectReward(agentActions);
         if (agentActions.GameController.DebugDrawIndividualReward)
         {
             Color rewardColor = Color.blue;

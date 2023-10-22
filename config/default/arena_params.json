@@ -5,15 +5,15 @@
     "wallsPosition": 0.0,
 
     "instantiateAgents": false,
-    "numHidersMin": 2,
+    "numHidersMin": 3,
     "numHidersMax": 3,
-    "numSeekersMin": 2,
+    "numSeekersMin": 3,
     "numSeekersMax": 3,
     "agentY": 1.0,
     "agentRadius": 0.75,
 
     "instantiateBoxes": true,
-    "numBoxesMin": 6,
+    "numBoxesMin": 8,
     "numBoxesMax": 8,
     "boxY": 1.0,
     "objectRadius": 1.5,

@@ -1,15 +1,19 @@
 {
     "episodeSteps": 500,
-    "gracePeriodFraction": 0.4000000059604645,
+    "gracePeriodFraction": 0.4,
     "coneAngle": 67.5,
 
-    "individualRewardType": 2,
-    "individualRewardMultiplier": 0.004000000189989805,
+    "rewards": [
+        {
+            "type": 0,
+            "weight": 0.004
+        }
+    ],
+    "winCondition": 1,
+    "winConditionRewardMultiplier": 1.0,
     "arenaSize": 25.0,
-    "oobPenalty": 0.0,
-    "groupRewardType": 2,
-    "groupRewardMultiplier": 1.0,
-    "winConditionThreshold": 1.0,
+    "allowCapture": false,
+    "captureDistance": 1.2,
 
     "useCoplay": false,
     "numberOfCoplayAgents": 1,
@@ -18,6 +22,7 @@
     "debugDrawBoxHold": true,
     "debugDrawVisibility": true,
     "debugDrawIndividualReward": true,
+    "debugDrawPlayAreaBounds": false,
     "debugLogPlatformParams": true,
     "debugLogMatchResult": false
 }
