@@ -32,6 +32,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private float arenaSize = 20f;
     [SerializeField] private bool allowCapture = false;
     [SerializeField] private float captureDistance = 1.2f;
+    [SerializeField] private int maxHidersCaptured = 1;
 
     [Header("Coplay")]
     [SerializeField] private bool useCoplay = false;
@@ -175,7 +176,7 @@ public class GameController : MonoBehaviour
                 {
                     hidersWon = true;
                 }
-                if (winCondition == WinCondition.Capture && hidersCaptured < hiders.Count())
+                if (winCondition == WinCondition.Capture && hidersCaptured <= maxHidersCaptured)
                 {
                     hidersWon = true;
                 }
@@ -407,11 +408,19 @@ public class GameController : MonoBehaviour
                     for (int i = 0; i < hiders.Count(); i++)
                     {
                         float reward = visibilityHiders[i] ? -rewardInfo.weight : rewardInfo.weight;
+                        if (allowCapture && hiders[i].WasCaptured)
+                        {
+                            reward = 0f;
+                        }
                         pendingRewards[hiders[i].GetInstanceID()] += reward;
                     }
                     for (int i = 0; i < seekers.Count(); i++)
                     {
                         float reward = visibilitySeekers[i] ? rewardInfo.weight : -rewardInfo.weight;
+                        if (allowCapture && hidersCaptured == hiders.Count())
+                        {
+                            reward = 0f;
+                        }
                         pendingRewards[seekers[i].GetInstanceID()] += reward;
                     }
                     break;

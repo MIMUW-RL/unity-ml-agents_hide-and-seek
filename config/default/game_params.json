@@ -14,6 +14,7 @@
     "arenaSize": 25.0,
     "allowCapture": false,
     "captureDistance": 1.2,
+	"maxHidersCaptured": 1,
 
     "useCoplay": false,
     "numberOfCoplayAgents": 1,
