@@ -184,7 +184,7 @@ public class GameController : MonoBehaviour
                 hidersGroup.AddGroupReward(hidersWon ? winConditionRewardMultiplier : -winConditionRewardMultiplier);
                 seekersGroup.AddGroupReward(hidersWon ? -winConditionRewardMultiplier : winConditionRewardMultiplier);
                 statsRecorder.Add("Environment/HiderWinRatio", hidersWon ? 1 : 0);
-                
+
                 if (debugLogMatchResult)
                 {
                     switch (winCondition)
@@ -276,6 +276,7 @@ public class GameController : MonoBehaviour
             foreach (AgentActions agent in hiders)
             {
                 agent.ResetAgent();
+                hidersGroup.RegisterAgent(agent.GetComponent<HideAndSeekAgent>());
             }
             foreach (AgentActions agent in seekers)
             {
