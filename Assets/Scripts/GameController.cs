@@ -159,50 +159,9 @@ public class GameController : MonoBehaviour
 
         UpdateRewards();
 
-        if (episodeTimer > episodeSteps)
+        if (episodeTimer >= episodeSteps)
         {
-            float timeHidden = stepsHidden / (episodeSteps * (1f - gracePeriodFraction));
-            statsRecorder.Add("Environment/TimeHidden", timeHidden);
-
-            if (allowCapture)
-            {
-                statsRecorder.Add("Environment/HidersCaptured", (float)hidersCaptured / hiders.Count());
-            }
-
-            if (winCondition != WinCondition.None)
-            {
-                bool hidersWon = false;
-                if (winCondition == WinCondition.LineOfSight && hidersPerfectGame)
-                {
-                    hidersWon = true;
-                }
-                if (winCondition == WinCondition.Capture && hidersCaptured <= maxHidersCaptured)
-                {
-                    hidersWon = true;
-                }
-
-                hidersGroup.AddGroupReward(hidersWon ? winConditionRewardMultiplier : -winConditionRewardMultiplier);
-                seekersGroup.AddGroupReward(hidersWon ? -winConditionRewardMultiplier : winConditionRewardMultiplier);
-                statsRecorder.Add("Environment/HiderWinRatio", hidersWon ? 1 : 0);
-
-                if (debugLogMatchResult)
-                {
-                    switch (winCondition)
-                    {
-                        case WinCondition.LineOfSight:
-                            Debug.LogFormat("Team {0} won; Time percentage hidden - {1}", hidersWon ? "hiders" : "seekers", timeHidden * 100f);
-                            break;
-
-                        case WinCondition.Capture:
-                            Debug.LogFormat("Team {0} won; Hiders captured - {1} / {2}", hidersWon ? "hiders" : "seekers", hidersCaptured, hiders.Count());
-                            break;
-                    }
-                }
-            }
-
-            hidersGroup.EndGroupEpisode();
-            seekersGroup.EndGroupEpisode();
-            ResetScene();
+            EndEpisode();
         }
         else if (GracePeriodEnded)
         {
@@ -221,16 +180,23 @@ public class GameController : MonoBehaviour
                     {
                         if (!hiders[j].WasCaptured && Vector3.Distance(seekers[i].transform.position, hiders[j].transform.position) < captureDistance)
                         {
-                            hiders[j].WasCaptured = true;
-                            hiders[j].gameObject.SetActive(false);
                             hidersCaptured++;
-
+                            hiders[j].WasCaptured = true;
                             foreach (RewardInfo rewardInfo in rewards)
                             {
                                 if (rewardInfo.type == RewardInfo.Type.OobPenalty)
                                 {
                                     pendingRewards[seekers[i].GetInstanceID()] += rewardInfo.weight;
                                 }
+                            }
+
+                            if (hidersCaptured < hiders.Count)
+                            {
+                                hiders[j].gameObject.SetActive(false);
+                            }
+                            else
+                            {
+                                EndEpisode();
                             }
                         }
                     }
@@ -264,7 +230,53 @@ public class GameController : MonoBehaviour
     }
 
 
-    public void ResetScene()
+    private void EndEpisode()
+    {
+        float timeHidden = GracePeriodEnded ? stepsHidden / ((float)episodeTimer / episodeSteps - gracePeriodFraction) : 0.0f;
+        statsRecorder.Add("Environment/TimeHidden", timeHidden);
+
+        if (allowCapture)
+        {
+            statsRecorder.Add("Environment/HidersCaptured", (float)hidersCaptured / hiders.Count());
+        }
+
+        if (winCondition != WinCondition.None)
+        {
+            bool hidersWon = false;
+            if (winCondition == WinCondition.LineOfSight && hidersPerfectGame)
+            {
+                hidersWon = true;
+            }
+            if (winCondition == WinCondition.Capture && hidersCaptured <= maxHidersCaptured)
+            {
+                hidersWon = true;
+            }
+
+            hidersGroup.AddGroupReward(hidersWon ? winConditionRewardMultiplier : -winConditionRewardMultiplier);
+            seekersGroup.AddGroupReward(hidersWon ? -winConditionRewardMultiplier : winConditionRewardMultiplier);
+            statsRecorder.Add("Environment/HiderWinRatio", hidersWon ? 1 : 0);
+
+            if (debugLogMatchResult)
+            {
+                switch (winCondition)
+                {
+                    case WinCondition.LineOfSight:
+                        Debug.LogFormat("Team {0} won; Time percentage hidden - {1}", hidersWon ? "hiders" : "seekers", timeHidden * 100f);
+                        break;
+
+                    case WinCondition.Capture:
+                        Debug.LogFormat("Team {0} won; Hiders captured - {1} / {2}", hidersWon ? "hiders" : "seekers", hidersCaptured, hiders.Count());
+                        break;
+                }
+            }
+        }
+
+        hidersGroup.EndGroupEpisode();
+        seekersGroup.EndGroupEpisode();
+        ResetScene();
+    }
+
+    private void ResetScene()
     {
         stepsHidden = 0;
         hidersPerfectGame = true;
@@ -281,6 +293,7 @@ public class GameController : MonoBehaviour
             foreach (AgentActions agent in seekers)
             {
                 agent.ResetAgent();
+                seekersGroup.RegisterAgent(agent.GetComponent<HideAndSeekAgent>());
             }
         }
 
