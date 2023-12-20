@@ -309,8 +309,8 @@ public class GameController : MonoBehaviour
 
         if (mapGenerator != null && mapGenerator.InstantiatesAgentsOnReset())
         {
-            hiders = ((MapGeneratorSimple)mapGenerator).GetInstantiatedHiders();
-            seekers = ((MapGeneratorSimple)mapGenerator).GetInstantiatedSeekers();
+            hiders = ((MapGenerator)mapGenerator).GetInstantiatedHiders();
+            seekers = ((MapGenerator)mapGenerator).GetInstantiatedSeekers();
             hiders.ForEach((AgentActions agent) => agent.GameController = this);
             seekers.ForEach((AgentActions agent) => agent.GameController = this);
             visibilityMatrix = new bool[hiders.Count, seekers.Count];
