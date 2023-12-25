@@ -628,7 +628,7 @@ PrefabInstance:
     - target: {fileID: 8857862129424821073, guid: a46f3f5bcc5ccdd4b91b907c12db70e4,
         type: 3}
       propertyPath: m_Name
-      value: Platform (random 3v3)
+      value: Platform (random 3v3) (6)
       objectReference: {fileID: 0}
     - target: {fileID: 8857862129424821075, guid: a46f3f5bcc5ccdd4b91b907c12db70e4,
         type: 3}

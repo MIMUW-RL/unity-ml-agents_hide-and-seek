@@ -83,7 +83,10 @@ public class CoplayManager : MonoBehaviour
                 model.modelData.name = "Data";
                 model.name = file;
 
+                Debug.Log("Found new model in modelPath, appending to checkpoints");
+                Debug.Log(file);
                 checkpoints.Add(model);
+                Debug.LogFormat("checkpoints size = {0}", checkpoints.Count);
             }
         }
     }

@@ -222,12 +222,16 @@ MonoBehaviour:
   useCoplay: 0
   numberOfCoplayAgents: 1
   selfPlayRatio: 0.5
+  inferenceMode: 0
+  hidersCheckpoint: {fileID: 0}
+  seekersCheckpoint: {fileID: 0}
   debugDrawBoxHold: 1
   debugDrawVisibility: 1
   debugDrawIndividualReward: 1
   debugDrawPlayAreaBounds: 1
   debugLogPlatformParams: 1
   debugLogMatchResult: 0
+  debugLogCoplay: 1
 --- !u!114 &8857862129424821076
 MonoBehaviour:
   m_ObjectHideFlags: 0

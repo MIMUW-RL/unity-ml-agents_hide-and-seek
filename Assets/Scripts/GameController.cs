@@ -51,6 +51,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private bool debugDrawPlayAreaBounds = true;
     [SerializeField] private bool debugLogPlatformParams = true;
     [SerializeField] private bool debugLogMatchResult = false;
+    [SerializeField] private bool debugLogCoplay = false;
 
 
     private int episodeTimer = 0;
@@ -338,7 +339,16 @@ public class GameController : MonoBehaviour
                 for (int i = 0; i < numberOfCoplayAgents; i++)
                 {
                     NNModel model = CoplayManager.Instance.GetRandomModel();
-                    (CoplayManager.TrainedTeamID == 0 ? hiders[i] : seekers[i]).SwitchToInference(model);
+                    if (model != null)
+                    {
+                        (CoplayManager.TrainedTeamID == 0 ? hiders[i] : seekers[i]).SwitchToInference(model);
+                        if (debugLogCoplay)
+                        {
+                            Debug.LogFormat("{0}, team {1}, agent {2}, set model = {3}",
+                                             gameObject.name, CoplayManager.TrainedTeamID, i,
+                                             model.name.Split("/").Last());
+                        }
+                    }
                 }
             }
         }

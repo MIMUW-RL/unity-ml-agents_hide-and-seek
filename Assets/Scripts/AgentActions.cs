@@ -172,7 +172,6 @@ public class AgentActions : MonoBehaviour
             return;
         }
 
-        Debug.Log(behaviorParameters);
         behaviorParameters.Model = model;
         behaviorParameters.BehaviorType = BehaviorType.InferenceOnly;
         behaviorParameters.DeterministicInference = true;
