@@ -32,7 +32,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private float arenaSize = 20f;
     [SerializeField] private bool allowCapture = false;
     [SerializeField] private float captureDistance = 1.2f;
-    [SerializeField] private int maxHidersCaptured = 1;
+    [SerializeField] private int seekersCaptureGoal = 2;
 
     [Header("Coplay")]
     [SerializeField] private bool useCoplay = false;
@@ -234,7 +234,7 @@ public class GameController : MonoBehaviour
 
     private void EndEpisode()
     {
-        float timeHidden = GracePeriodEnded ? stepsHidden / ((float)episodeTimer / episodeSteps - gracePeriodFraction) : 0.0f;
+        float timeHidden = GracePeriodEnded ? stepsHidden / Mathf.Ceil(episodeTimer - episodeSteps * gracePeriodFraction) : 0.0f;
         statsRecorder.Add("Environment/TimeHidden", timeHidden);
 
         if (allowCapture)
@@ -249,7 +249,7 @@ public class GameController : MonoBehaviour
             {
                 hidersWon = true;
             }
-            if (winCondition == WinCondition.Capture && hidersCaptured <= maxHidersCaptured)
+            if (winCondition == WinCondition.Capture && hidersCaptured < seekersCaptureGoal)
             {
                 hidersWon = true;
             }

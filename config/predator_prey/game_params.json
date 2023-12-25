@@ -18,7 +18,7 @@
     "arenaSize": 25.0,
     "allowCapture": true,
     "captureDistance": 1.2,
-	"maxHidersCaptured": 1,
+    "seekersCaptureGoal": 2,
 
     "useCoplay": false,
     "numberOfCoplayAgents": 1,
@@ -29,5 +29,6 @@
     "debugDrawIndividualReward": true,
     "debugDrawPlayAreaBounds": false,
     "debugLogPlatformParams": true,
-    "debugLogMatchResult": false
+    "debugLogMatchResult": false,
+    "debugLogCoplay": true
 }

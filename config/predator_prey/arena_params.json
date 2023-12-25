@@ -4,7 +4,6 @@
     "wallThickness": 0.25,
     "wallsPosition": 0.0,
 
-    "instantiateAgents": false,
     "numHidersMin": 3,
     "numHidersMax": 3,
     "numSeekersMin": 3,
@@ -13,7 +12,7 @@
     "agentRadius": 0.75,
 
     "instantiateBoxes": true,
-    "numBoxesMin": 8,
+    "numBoxesMin": 5,
     "numBoxesMax": 8,
     "boxY": 1.0,
     "objectRadius": 1.5,
