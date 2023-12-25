@@ -12,9 +12,6 @@ public class AgentActions : MonoBehaviour
     [SerializeField] private float holdBreakDistance = 4f;
     [SerializeField] private bool isHiding = true;
 
-    private Vector3 startPosition;
-    private Quaternion startRotation;
-
     private Vector2 movementInput = Vector2.zero;
     private float rotationInput = 0f;
 
@@ -33,11 +30,9 @@ public class AgentActions : MonoBehaviour
     public GameController GameController { get; set; }
 
 
-    private void Start()
+    private void Awake()
     {
         behaviorParameters = GetComponent<BehaviorParameters>();
-        startPosition = transform.position;
-        startRotation = transform.rotation;
     }
 
     private void FixedUpdate()
@@ -156,8 +151,6 @@ public class AgentActions : MonoBehaviour
 
     public void ResetAgent()
     {
-        transform.position = startPosition;
-        transform.rotation = startRotation;
         rigidbody.velocity = Vector3.zero;
         rigidbody.angularVelocity = Vector3.zero;
         grabbedBox = null;
@@ -179,6 +172,7 @@ public class AgentActions : MonoBehaviour
             return;
         }
 
+        Debug.Log(behaviorParameters);
         behaviorParameters.Model = model;
         behaviorParameters.BehaviorType = BehaviorType.InferenceOnly;
         behaviorParameters.DeterministicInference = true;

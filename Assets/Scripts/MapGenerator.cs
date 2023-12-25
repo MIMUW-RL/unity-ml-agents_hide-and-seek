@@ -18,13 +18,12 @@ public class MapGenerator : MonoBehaviour
 
     [Header("Agent placement")]
     // instantiateAgents must be on if agent count should be randomized every episode
-    [SerializeField] private bool instantiateAgents = false;
     [SerializeField] private Transform agentParent = null;
     [SerializeField] private AgentActions hiderPrefab = null;
     [SerializeField] private AgentActions seekerPrefab = null;
-    [SerializeField] private int numHidersMin = 2;
+    [SerializeField] private int numHidersMin = 3;
     [SerializeField] private int numHidersMax = 3;
-    [SerializeField] private int numSeekersMin = 2;
+    [SerializeField] private int numSeekersMin = 3;
     [SerializeField] private int numSeekersMax = 3;
     [SerializeField] private float agentY = 1f;
     [SerializeField] private float agentRadius = 0.75f;
@@ -52,10 +51,11 @@ public class MapGenerator : MonoBehaviour
     private AgentActions[] hiders = null;
     private AgentActions[] seekers = null;
     private BoxHolding[] boxes = null;
-    private bool scannedObjects = false;
 
-    public List<AgentActions> GetInstantiatedHiders() => instantiateAgents ? hiders.ToList() : new List<AgentActions>();
-    public List<AgentActions> GetInstantiatedSeekers() => instantiateAgents ? seekers.ToList() : new List<AgentActions>();
+    public int NumHiders { get; private set; } = 0;
+    public int NumSeekers { get; private set; } = 0;
+    public List<AgentActions> GetInstantiatedHiders() => hiders.ToList();
+    public List<AgentActions> GetInstantiatedSeekers() => seekers.ToList();
 
 
     private void Awake()
@@ -68,39 +68,25 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
+    public void Initialize()
+    {
+        // TODO: scan and remove existing agents
+
+        hiders = Enumerable.Range(0, numHidersMax).Select(_ => Instantiate(hiderPrefab, agentParent)).ToArray();
+        seekers = Enumerable.Range(0, numSeekersMax).Select(_ => Instantiate(seekerPrefab, agentParent)).ToArray();
+
+        if (!instantiateBoxes)
+        {
+            boxes = FindObjectsOfType<BoxHolding>();
+        }
+    }
+
     public void Generate()
     {
-        if (!scannedObjects)
-        {
-            if (!instantiateAgents)
-            {
-                AgentActions[] allAgents = GetComponentsInChildren<AgentActions>();
-                hiders = allAgents.Where((AgentActions agent) => agent.IsHiding).ToArray();
-                seekers = allAgents.Where((AgentActions agent) => !agent.IsHiding).ToArray();
-            }
-            if (!instantiateBoxes)
-            {
-                boxes = FindObjectsOfType<BoxHolding>();
-            }
-            scannedObjects = true;
-        }
-
         generatedWalls?.ForEach((GameObject wall) => Destroy(wall));
         generatedWalls = new List<GameObject>();
         GenerateMainRoom();
-
-        if (instantiateAgents)
-        {
-            if (hiders != null)
-            {
-                Array.ForEach(hiders, (AgentActions hider) => Destroy(hider.gameObject));
-            }
-            if (seekers != null)
-            {
-                Array.ForEach(seekers, (AgentActions seeker) => Destroy(seeker.gameObject));
-            }
-        }
-
+        
         if (instantiateBoxes)
         {
             if (boxes != null)
@@ -173,33 +159,23 @@ public class MapGenerator : MonoBehaviour
     {
         List<(Vector2, float)> itemPlacement = new List<(Vector2, float)>();
 
-        int numHiders = instantiateAgents ? Random.Range(numHidersMin, numHidersMax + 1) : hiders.Length;
-        int numSeekers = instantiateAgents ? Random.Range(numSeekersMin, numSeekersMax + 1) : seekers.Length;
-        for (int i = 0; i < numHiders; i++)
+        NumHiders = Random.Range(numHidersMin, numHidersMax + 1);
+        NumSeekers = Random.Range(numSeekersMin, numSeekersMax + 1);
+        for (int i = 0; i < NumHiders; i++)
         {
             if (!TryPlaceObject(itemPlacement, PickPointHider, agentRadius, numTriesAgent))
             {
                 // this shouldn't happen during the training, as it may break trainer
                 Debug.LogError("Couldn't randomize agent placement");
-                if (instantiateAgents)
-                {
-                    hiders = new AgentActions[0];
-                    seekers = new AgentActions[0];
-                }
                 return;
             }
         }
-        for (int i = 0; i < numSeekers; i++)
+        for (int i = 0; i < NumSeekers; i++)
         {
             if (!TryPlaceObject(itemPlacement, PickPointSeeker, agentRadius, numTriesAgent))
             {
                 // this shouldn't happen during the training, as it may break trainer
                 Debug.LogError("Couldn't randomize agent placement");
-                if (instantiateAgents)
-                {
-                    hiders = new AgentActions[0];
-                    seekers = new AgentActions[0];
-                }
                 return;
             }
         }
@@ -216,31 +192,18 @@ public class MapGenerator : MonoBehaviour
         }
 
         
-        if (instantiateAgents)
-        {
-            hiders = new AgentActions[numHiders];
-            seekers = new AgentActions[numSeekers];
-        }
-        for (int i = 0; i < numHiders; i++)
+        for (int i = 0; i < NumHiders; i++)
         {
             float x = itemPlacement[i].Item1.x;
             float z = itemPlacement[i].Item1.y;
-            if (instantiateAgents)
-            {
-                hiders[i] = Instantiate(hiderPrefab, agentParent);
-            }
             hiders[i].transform.position = new Vector3(x, agentY, z) + transform.position;
             hiders[i].transform.rotation = Quaternion.Euler(0f, Random.Range(0f, 360f), 0f);
         }
-        for (int i = 0; i < numSeekers; i++)
+        for (int i = 0; i < NumSeekers; i++)
         {
-            int id = i + numHiders;
+            int id = i + NumHiders;
             float x = itemPlacement[id].Item1.x;
             float z = itemPlacement[id].Item1.y;
-            if (instantiateAgents)
-            {
-                seekers[i] = Instantiate(seekerPrefab, agentParent);
-            }
             seekers[i].transform.position = new Vector3(x, agentY, z) + transform.position;
             seekers[i].transform.rotation = Quaternion.Euler(0f, Random.Range(0f, 360f), 0f);
         }
@@ -251,7 +214,7 @@ public class MapGenerator : MonoBehaviour
         }
         for (int i = 0; i < numBoxes; i++)
         {
-            int id = i + numHiders + numSeekers;
+            int id = i + NumHiders + NumSeekers;
             float x = itemPlacement[id].Item1.x;
             float z = itemPlacement[id].Item1.y;
             if (instantiateBoxes)
@@ -354,6 +317,5 @@ public class MapGenerator : MonoBehaviour
     }
 
 
-    public bool InstantiatesAgentsOnReset() => instantiateAgents;
     public bool InstantiatesBoxesOnReset() => instantiateBoxes;
 }

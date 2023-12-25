@@ -39,6 +39,11 @@ public class GameController : MonoBehaviour
     [SerializeField] private int numberOfCoplayAgents = 1;
     [SerializeField] private float selfPlayRatio = 0.5f;
 
+    [Header("Inference")]
+    [SerializeField] private bool inferenceMode = false;
+    [SerializeField] private NNModel hidersCheckpoint = null;
+    [SerializeField] private NNModel seekersCheckpoint = null;
+
     [Header("Debug")]
     [SerializeField] private bool debugDrawBoxHold = true;
     [SerializeField] private bool debugDrawVisibility = true;
@@ -51,6 +56,8 @@ public class GameController : MonoBehaviour
     private int episodeTimer = 0;
     private List<AgentActions> hiders;
     private List<AgentActions> seekers;
+    private List<AgentActions> hiderInstances;
+    private List<AgentActions> seekerInstances;
     private SimpleMultiAgentGroup hidersGroup;
     private SimpleMultiAgentGroup seekersGroup;
     private List<BoxHolding> holdObjects;
@@ -98,33 +105,27 @@ public class GameController : MonoBehaviour
             Console.WriteLine();
         }
 
-        mapGenerator?.Generate();
+        mapGenerator.Initialize();
+        hiderInstances = mapGenerator.GetInstantiatedHiders();
+        seekerInstances = mapGenerator.GetInstantiatedSeekers();
+        hiderInstances.ForEach(hider => hider.GameController = this);
+        seekerInstances.ForEach(seeker => seeker.GameController = this);
 
-        AgentActions[] allAgents = GetComponentsInChildren<AgentActions>();
-        System.Array.ForEach(allAgents, (AgentActions agent) => agent.GameController = this);
-        hiders = allAgents.Where((AgentActions a) => a.IsHiding).ToList();
-        seekers = allAgents.Where((AgentActions a) => !a.IsHiding).ToList();
-        holdObjects = FindObjectsOfType<BoxHolding>().ToList();
-        visibilityMatrix = new bool[hiders.Count, seekers.Count];
-        visibilityHiders = new bool[hiders.Count];
-        visibilitySeekers = new bool[seekers.Count];
-        allHidden = false;
-
-        pendingRewards = new Dictionary<int, float>();
+        if (inferenceMode)
+        {
+            hiderInstances.ForEach(hider => hider.SwitchToInference(hidersCheckpoint));
+            seekerInstances.ForEach(hider => hider.SwitchToInference(seekersCheckpoint));
+        }
 
         hidersGroup = new SimpleMultiAgentGroup();
-        foreach (AgentActions hider in hiders)
-        {
-            hidersGroup.RegisterAgent(hider.GetComponent<HideAndSeekAgent>());
-        }
-
         seekersGroup = new SimpleMultiAgentGroup();
-        foreach (AgentActions seeker in seekers)
-        {
-            seekersGroup.RegisterAgent(seeker.GetComponent<HideAndSeekAgent>());
-        }
 
+        holdObjects = FindObjectsOfType<BoxHolding>().ToList();
+
+        pendingRewards = new Dictionary<int, float>();
         statsRecorder = Academy.Instance.StatsRecorder;
+
+        ResetScene();
     }
 
     private void Update()
@@ -283,21 +284,8 @@ public class GameController : MonoBehaviour
         hidersCaptured = 0;
         episodeTimer = 0;
         pendingRewards.Clear();
-        if (mapGenerator == null || !mapGenerator.InstantiatesAgentsOnReset())
-        {
-            foreach (AgentActions agent in hiders)
-            {
-                agent.ResetAgent();
-                hidersGroup.RegisterAgent(agent.GetComponent<HideAndSeekAgent>());
-            }
-            foreach (AgentActions agent in seekers)
-            {
-                agent.ResetAgent();
-                seekersGroup.RegisterAgent(agent.GetComponent<HideAndSeekAgent>());
-            }
-        }
 
-        if (mapGenerator == null || !mapGenerator.InstantiatesBoxesOnReset())
+        if (!mapGenerator.InstantiatesBoxesOnReset())
         {
             foreach (BoxHolding holdObject in holdObjects)
             {
@@ -305,40 +293,35 @@ public class GameController : MonoBehaviour
             }
         }
 
-        mapGenerator?.Generate();
-
-        if (mapGenerator != null && mapGenerator.InstantiatesAgentsOnReset())
+        mapGenerator.Generate();
+        hiders = hiderInstances.Take(mapGenerator.NumHiders).ToList();
+        seekers = seekerInstances.Take(mapGenerator.NumSeekers).ToList();
+        foreach (AgentActions hider in hiders)
         {
-            hiders = ((MapGenerator)mapGenerator).GetInstantiatedHiders();
-            seekers = ((MapGenerator)mapGenerator).GetInstantiatedSeekers();
-            hiders.ForEach((AgentActions agent) => agent.GameController = this);
-            seekers.ForEach((AgentActions agent) => agent.GameController = this);
-            visibilityMatrix = new bool[hiders.Count, seekers.Count];
-
-            hidersGroup = new SimpleMultiAgentGroup();
-            foreach (AgentActions hider in hiders)
-            {
-                hidersGroup.RegisterAgent(hider.GetComponent<HideAndSeekAgent>());
-            }
-
-            seekersGroup = new SimpleMultiAgentGroup();
-            foreach (AgentActions seeker in seekers)
-            {
-                seekersGroup.RegisterAgent(seeker.GetComponent<HideAndSeekAgent>());
-            }
+            hider.ResetAgent();
+            hidersGroup.RegisterAgent(hider.GetComponent<HideAndSeekAgent>());
         }
-        else
+        foreach (AgentActions seeker in seekers)
         {
-            for (int i = 0; i < visibilityMatrix.GetLength(0); i++)
-            {
-                for (int j = 0; j < visibilityMatrix.GetLength(1); j++)
-                {
-                    visibilityMatrix[i, j] = false;
-                }
-            }
+            seeker.ResetAgent();
+            seekersGroup.RegisterAgent(seeker.GetComponent<HideAndSeekAgent>());
         }
+        seekers.ForEach(seeker => seekersGroup.RegisterAgent(seeker.GetComponent<HideAndSeekAgent>()));
+        for (int i = 0; i < hiderInstances.Count; i++)
+        {
+            hiderInstances[i].gameObject.SetActive(i < hiders.Count);
+        }
+        for (int i = 0; i < seekerInstances.Count; i++)
+        {
+            seekerInstances[i].gameObject.SetActive(i < seekers.Count);
+        }
+        
+        visibilityMatrix = new bool[hiders.Count, seekers.Count];
+        visibilityHiders = new bool[hiders.Count];
+        visibilitySeekers = new bool[seekers.Count];
+        allHidden = false;
 
-        if (useCoplay)
+        if (!inferenceMode && useCoplay)
         {
             CoplayManager.Instance.Rescan();
             foreach (AgentActions agent in hiders)
