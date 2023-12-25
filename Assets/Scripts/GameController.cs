@@ -185,7 +185,7 @@ public class GameController : MonoBehaviour
                             hiders[j].WasCaptured = true;
                             foreach (RewardInfo rewardInfo in rewards)
                             {
-                                if (rewardInfo.type == RewardInfo.Type.OobPenalty)
+                                if (rewardInfo.type == RewardInfo.Type.Capture)
                                 {
                                     pendingRewards[seekers[i].GetInstanceID()] += rewardInfo.weight;
                                 }
