@@ -79,15 +79,14 @@ public class HideAndSeekAgent : Agent
             agentActions.LockBox(false);
         }
 
-        float reward = agentActions.GameController.CollectReward(agentActions);
         if (agentActions.GameController.DebugDrawIndividualReward)
         {
+            float reward = GetCumulativeReward();
             Color rewardColor = Color.blue;
             if (reward > 0f) rewardColor = Color.green;
             if (reward < 0f) rewardColor = Color.red;
-            Debug.DrawRay(transform.position, Vector3.up * 5f, rewardColor);
+            Debug.DrawRay(transform.position, 20f * Mathf.Abs(reward) * Vector3.up, rewardColor);
         }
-        AddReward(reward);
     }
 
     public override void Heuristic(in ActionBuffers actionsOut)

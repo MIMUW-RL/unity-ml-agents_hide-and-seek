@@ -68,7 +68,6 @@ public class GameController : MonoBehaviour
     private bool[] visibilitySeekers;
     private bool allHidden;
 
-    private Dictionary<int, float> pendingRewards = null;
     private int stepsHidden = 0;
     private int hidersCaptured = 0;
     private bool hidersPerfectGame = true;
@@ -123,7 +122,6 @@ public class GameController : MonoBehaviour
 
         holdObjects = FindObjectsOfType<BoxHolding>().ToList();
 
-        pendingRewards = new Dictionary<int, float>();
         statsRecorder = Academy.Instance.StatsRecorder;
 
         ResetScene();
@@ -188,7 +186,7 @@ public class GameController : MonoBehaviour
                             {
                                 if (rewardInfo.type == RewardInfo.Type.Capture)
                                 {
-                                    pendingRewards[seekers[i].GetInstanceID()] += rewardInfo.weight;
+                                    seekers[i].HideAndSeekAgent.AddReward(rewardInfo.weight);
                                 }
                             }
 
@@ -222,13 +220,6 @@ public class GameController : MonoBehaviour
         {
             yield return agent;
         }
-    }
-
-    public float CollectReward(AgentActions agent)
-    {
-        float reward = pendingRewards.GetValueOrDefault(agent.GetInstanceID(), 0f);
-        pendingRewards[agent.GetInstanceID()] = 0f;
-        return reward;
     }
 
 
@@ -284,7 +275,6 @@ public class GameController : MonoBehaviour
         hidersPerfectGame = true;
         hidersCaptured = 0;
         episodeTimer = 0;
-        pendingRewards.Clear();
 
         if (!mapGenerator.InstantiatesBoxesOnReset())
         {
@@ -300,14 +290,14 @@ public class GameController : MonoBehaviour
         foreach (AgentActions hider in hiders)
         {
             hider.ResetAgent();
-            hidersGroup.RegisterAgent(hider.GetComponent<HideAndSeekAgent>());
+            hidersGroup.RegisterAgent(hider.HideAndSeekAgent);
         }
         foreach (AgentActions seeker in seekers)
         {
             seeker.ResetAgent();
-            seekersGroup.RegisterAgent(seeker.GetComponent<HideAndSeekAgent>());
+            seekersGroup.RegisterAgent(seeker.HideAndSeekAgent);
         }
-        seekers.ForEach(seeker => seekersGroup.RegisterAgent(seeker.GetComponent<HideAndSeekAgent>()));
+
         for (int i = 0; i < hiderInstances.Count; i++)
         {
             hiderInstances[i].gameObject.SetActive(i < hiders.Count);
@@ -419,7 +409,7 @@ public class GameController : MonoBehaviour
                         {
                             reward = 0f;
                         }
-                        pendingRewards[hiders[i].GetInstanceID()] += reward;
+                        hiders[i].HideAndSeekAgent.AddReward(reward);
                     }
                     for (int i = 0; i < seekers.Count(); i++)
                     {
@@ -428,25 +418,25 @@ public class GameController : MonoBehaviour
                         {
                             reward = 0f;
                         }
-                        pendingRewards[seekers[i].GetInstanceID()] += reward;
+                        seekers[i].HideAndSeekAgent.AddReward(reward);
                     }
                     break;
 
                 case RewardInfo.Type.VisibilityTeam:
                     if (!GracePeriodEnded) break;
                     float hidersReward = allHidden ? rewardInfo.weight : -rewardInfo.weight;
-                    hiders.ForEach((AgentActions hider) => pendingRewards[hider.GetInstanceID()] += hidersReward);
-                    seekers.ForEach((AgentActions seeker) => pendingRewards[seeker.GetInstanceID()] -= hidersReward);
+                    hiders.ForEach((AgentActions hider) => hider.HideAndSeekAgent.AddReward(hidersReward));
+                    seekers.ForEach((AgentActions seeker) => seeker.HideAndSeekAgent.AddReward(-hidersReward));
                     break;
 
                 case RewardInfo.Type.OobPenalty:
-                    foreach (AgentActions agent in hiders.Where((AgentActions agent) => IsOoB(agent)))
+                    foreach (AgentActions hider in hiders.Where((AgentActions agent) => IsOoB(agent)))
                     {
-                        pendingRewards[agent.GetInstanceID()] -= rewardInfo.weight;
+                        hider.HideAndSeekAgent.AddReward(-rewardInfo.weight);
                     }
-                    foreach (AgentActions agent in seekers.Where((AgentActions agent) => IsOoB(agent)))
+                    foreach (AgentActions seeker in seekers.Where((AgentActions agent) => IsOoB(agent)))
                     {
-                        pendingRewards[agent.GetInstanceID()] -= rewardInfo.weight;
+                        seeker.HideAndSeekAgent.AddReward(-rewardInfo.weight);
                     }
                     break;
             }

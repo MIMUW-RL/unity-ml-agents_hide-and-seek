@@ -5,6 +5,7 @@ using UnityEngine;
 public class AgentActions : MonoBehaviour
 {
     [SerializeField] private new Rigidbody rigidbody = null;
+    [SerializeField] private HideAndSeekAgent hideAndSeekAgent = null;
     [SerializeField] private float runSpeed = 1f;
     [SerializeField] private float drag = 0.3f;
     [SerializeField] private float rotationSpeed = 360f;
@@ -21,6 +22,7 @@ public class AgentActions : MonoBehaviour
     private BehaviorParameters behaviorParameters = null;
 
     public Rigidbody Rigidbody { get { return rigidbody; } }
+    public HideAndSeekAgent HideAndSeekAgent { get { return hideAndSeekAgent; } }
     
     public bool IsHiding { get { return isHiding; } }
 
