@@ -14,11 +14,11 @@
         }
     ],
     "winCondition": 2,
-    "winConditionRewardMultiplier": 1.0,
+    "winConditionRewardMultiplier": 2.0,
     "arenaSize": 25.0,
     "allowCapture": true,
     "captureDistance": 1.2,
-    "seekersCaptureGoal": 2,
+    "seekersCaptureGoal": 3,
 
     "useCoplay": false,
     "numberOfCoplayAgents": 1,
