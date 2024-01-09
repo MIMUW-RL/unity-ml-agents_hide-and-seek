@@ -187,6 +187,7 @@ public class GameController : MonoBehaviour
                                 if (rewardInfo.type == RewardInfo.Type.Capture)
                                 {
                                     seekers[i].HideAndSeekAgent.AddReward(rewardInfo.weight);
+                                    hiders[j].HideAndSeekAgent.AddReward(-rewardInfo.weight);
                                 }
                             }
 
@@ -306,7 +307,7 @@ public class GameController : MonoBehaviour
         {
             seekerInstances[i].gameObject.SetActive(i < seekers.Count);
         }
-        
+
         visibilityMatrix = new bool[hiders.Count, seekers.Count];
         visibilityHiders = new bool[hiders.Count];
         visibilitySeekers = new bool[seekers.Count];
