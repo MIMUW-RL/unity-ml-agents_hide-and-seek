@@ -5,7 +5,6 @@ using System.Linq;
 using Unity.Barracuda;
 using Unity.MLAgents;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public class GameController : MonoBehaviour
 {
@@ -277,7 +276,6 @@ public class GameController : MonoBehaviour
         hidersPerfectGame = true;
         hidersCaptured = 0;
         episodeTimer = 0;
-        var _random = new System.Random();
 
         if (!mapGenerator.InstantiatesBoxesOnReset())
         {
@@ -342,7 +340,7 @@ public class GameController : MonoBehaviour
                 //shuffle
                 for (int i = numbers.Count - 1; i > 0; i--)
                 {
-                    int j = _random.Next(0, i + 1);
+                    int j = UnityEngine.Random.Range(0, i + 1);
                     int tmp = numbers[i];
                     numbers[i] = numbers[j];
                     numbers[j] = tmp;
