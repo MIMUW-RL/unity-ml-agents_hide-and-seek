@@ -187,6 +187,7 @@ public class GameController : MonoBehaviour
                                 if (rewardInfo.type == RewardInfo.Type.Capture)
                                 {
                                     seekers[i].HideAndSeekAgent.AddReward(rewardInfo.weight);
+                                    hiders[j].HideAndSeekAgent.AddReward(-rewardInfo.weight);
                                 }
                             }
 
@@ -306,7 +307,7 @@ public class GameController : MonoBehaviour
         {
             seekerInstances[i].gameObject.SetActive(i < seekers.Count);
         }
-        
+
         visibilityMatrix = new bool[hiders.Count, seekers.Count];
         visibilityHiders = new bool[hiders.Count];
         visibilitySeekers = new bool[seekers.Count];
@@ -326,16 +327,35 @@ public class GameController : MonoBehaviour
 
             if (UnityEngine.Random.Range(0f, 1f) < selfPlayRatio)
             {
+                int maxBound = 0;
+                if (CoplayManager.TrainedTeamID == 0)
+                {
+                    maxBound = hiders.Count;
+                }
+                else
+                {
+                    maxBound = seekers.Count;
+                }
+                var numbers = Enumerable.Range(0, maxBound).ToList();
+                //shuffle
+                for (int i = numbers.Count - 1; i > 0; i--)
+                {
+                    int j = UnityEngine.Random.Range(0, i + 1);
+                    int tmp = numbers[i];
+                    numbers[i] = numbers[j];
+                    numbers[j] = tmp;
+                }
+                var randomPos = numbers.Take(numberOfCoplayAgents).ToList();
                 for (int i = 0; i < numberOfCoplayAgents; i++)
                 {
                     NNModel model = CoplayManager.Instance.GetRandomModel();
                     if (model != null)
                     {
-                        (CoplayManager.TrainedTeamID == 0 ? hiders[i] : seekers[i]).SwitchToInference(model);
+                        (CoplayManager.TrainedTeamID == 0 ? hiders[randomPos[i]] : seekers[randomPos[i]]).SwitchToInference(model);
                         if (debugLogCoplay)
                         {
                             Debug.LogFormat("{0}, team {1}, agent {2}, set model = {3}",
-                                             gameObject.name, CoplayManager.TrainedTeamID, i,
+                                             gameObject.name, CoplayManager.TrainedTeamID, randomPos[i],
                                              model.name.Split("/").Last());
                         }
                     }
