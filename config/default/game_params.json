@@ -10,7 +10,7 @@
         }
     ],
     "winCondition": 1,
-    "winConditionRewardMultiplier": 1.0,
+    "winConditionRewardMultiplier": 2.0,
     "arenaSize": 25.0,
     "allowCapture": false,
     "captureDistance": 1.2,
