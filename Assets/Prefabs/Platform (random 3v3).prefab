@@ -212,13 +212,15 @@ MonoBehaviour:
   gracePeriodFraction: 0.4
   coneAngle: 67.5
   mapGenerator: {fileID: 8857862129424821076}
-  rewards: []
-  winCondition: 0
+  rewards:
+  - type: 0
+    weight: 0.004
+  winCondition: 1
   winConditionRewardMultiplier: 1
   arenaSize: 25
   allowCapture: 0
   captureDistance: 1.2
-  maxHidersCaptured: 1
+  seekersCaptureGoal: 2
   useCoplay: 0
   numberOfCoplayAgents: 1
   selfPlayRatio: 0.5
