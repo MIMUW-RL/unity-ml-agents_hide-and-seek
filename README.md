@@ -1,3 +1,8 @@
+# ML-Agents Hide and Seek
+<gif here>
+
+Hide and seek is an asymmetric cooperative-competitive environment for [Unity ML-Agents](https://github.com/Unity-Technologies/ml-agents) framework. The agents are divided into two teams: hiders and seekers. The goal of seekers is to maintain a line of sight on hiders, while the goal of hiders is to remain hidden throughout the game. The environment supports the predator-prey gameplay variant, where the goal of seekers is to capture hiders instead of simply having a line of sight on them. This repository was used for training and evaluation in the paper [FCSP: Fictitious Co-Self-Play for Team-based Multi-agent Reinforcement Learning](todo).
+
 ## Requirements
 The project was made using Unity 2021.3.10f1 with ML-Agents Release 20 (Unity package version 2.3.0-exp.2). To train the agents, [the ML-Agents Python package](https://github.com/Unity-Technologies/ml-agents/blob/release_20_docs/docs/Installation.md#install-the-mlagents-python-package) is required.
 
@@ -18,7 +23,7 @@ See the [ML-Agents getting started guide](https://github.com/Unity-Technologies/
 
 ## Environment Settings
 The following tables describe the parameters of `Game Controller` and `Map Generator` scripts attached to platform objects.
-The parameters can be either changed in the Unity inspector or overridden by passing a JSON config to the environment binary. Example configs are located in the `config` directory.
+The parameters can be either changed in the Unity inspector or overridden by passing a JSON config to the environment binary. Example configs are located in the `config` directory. The config files for hide and seek gamemode can be found in `config/default` and the config files for predator-prey gamemode can be found in `config/predator_prey`. The `config/borderless` shows an example of an arena that is not restricted by walls and penalizes agents for trying to go out of bounds instead.
 
 ### Game Parameters
 | **Parameter** | **Description** |
@@ -41,19 +46,15 @@ The parameters can be either changed in the Unity inspector or overridden by pas
 | **Parameter** | **Description** |
 |---------------|-----------------|
 | `mapSize` | (default = `25.0`) The size of the playable area of the platform used during map generation. Should be equal to `arenaSize` set in game parameters. |
-| `wallY` | (default = `1.0`) The height at which arena walls spawn. Should be left at the default value. |
-| `wallThickness` | (default = `0.25`) The thickness of wall prefab objects. Should be left at the default value. |
 | `wallsPosition` | (default = `0.0`) The distance of walls from the center of the platform. If set to `0`, the distance will match `arenaSize`. |
 | `numHidersMin` | (default = `3`) The minimum number of hiders in team. |
 | `numHidersMax` | (default = `3`) The maximum number of hiders in team. Should be at most `4` and not smaller than `numHidersMin`. |
 | `numSeekersMin` | (default = `3`) The minimum number of seekers in team. |
 | `numSeekersMax` | (default = `3`) The maximum number of seekers in team. Should be at most `4` and not smaller than `numSeekersMin`. |
-| `agentY` | (default = `1.0`) The height at which agents spawn. Should be left at the default value. |
 | `agentRadius` | (default = `0.75`) The radius around each agent at which no objects will spawn during map generation. |
 | `instantiateBoxes` | (default = `true`) Whether boxes should be spawned every episode. |
 | `numBoxesMin` | (default = `5`) The minimum number of boxes which spawn every episode. |
 | `numBoxesMax` | (default = `5`) The maximum number of boxes which spawn every episode. Should be not smaller than `numBoxesMin`. |
-| `boxY` | (default = `1.0`) The height at which boxes spawn. Should be left at default value. |
 | `objectRadius` | (default = `1.5`) The radius around each box at which no other objects will spawn during map generation. |
 
 ### Reward Types
