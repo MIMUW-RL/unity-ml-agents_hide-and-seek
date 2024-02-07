@@ -250,13 +250,13 @@ PrefabInstance:
         type: 3}
       propertyPath: hidersCheckpoint
       value: 
-      objectReference: {fileID: 5022602860645237092, guid: 7b8afa2d1df41374f90d95c63649fd92,
+      objectReference: {fileID: 5022602860645237092, guid: d6e7b03378313ef44b1a2d53993e7461,
         type: 3}
     - target: {fileID: 8857862129424821074, guid: a46f3f5bcc5ccdd4b91b907c12db70e4,
         type: 3}
       propertyPath: seekersCheckpoint
       value: 
-      objectReference: {fileID: 5022602860645237092, guid: 7b8afa2d1df41374f90d95c63649fd92,
+      objectReference: {fileID: 5022602860645237092, guid: 08c2a4e7a40caae4ca0e3e28f9f5aaf4,
         type: 3}
     - target: {fileID: 8857862129424821074, guid: a46f3f5bcc5ccdd4b91b907c12db70e4,
         type: 3}
