@@ -9,7 +9,7 @@
     "agentRadius": 0.75,
 
     "instantiateBoxes": true,
-    "numBoxesMin": 5,
+    "numBoxesMin": 3,
     "numBoxesMax": 8,
     "objectRadius": 1.5
 }

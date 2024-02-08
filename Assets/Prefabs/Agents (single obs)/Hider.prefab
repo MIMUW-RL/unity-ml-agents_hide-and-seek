@@ -249,6 +249,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rigidbody: {fileID: 3198067207007129525}
+  hideAndSeekAgent: {fileID: 2409372132783999302}
   runSpeed: 5
   drag: 0.3
   rotationSpeed: 360
@@ -273,6 +274,8 @@ MonoBehaviour:
   MaxStep: 2000
   agentActions: {fileID: 3198067207007129524}
   teamBufferSensor: {fileID: 7994554232314678105}
+  dummyRaycastSensors: []
+  dummyRaycastSensorSizes: 
 --- !u!114 &5221234021268126137
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -286,7 +289,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 8
+    VectorObservationSize: 9
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 3

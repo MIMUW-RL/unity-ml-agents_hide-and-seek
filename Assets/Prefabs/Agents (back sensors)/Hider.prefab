@@ -139,6 +139,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rigidbody: {fileID: 1881455841911720017}
+  hideAndSeekAgent: {fileID: 1662487972002909858}
   runSpeed: 5
   drag: 0.3
   rotationSpeed: 360

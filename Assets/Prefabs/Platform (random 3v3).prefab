@@ -268,7 +268,7 @@ MonoBehaviour:
   instantiateBoxes: 1
   boxPrefabs:
   - {fileID: 35575987407354009, guid: 15956294e5d1be546a8d76204c1b82ef, type: 3}
-  numBoxesMin: 5
+  numBoxesMin: 3
   numBoxesMax: 8
   boxY: 1
   objectRadius: 1.5
