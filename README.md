@@ -11,7 +11,7 @@ To run inference, use the `Scenes/Test` scene. Checkpoints for hiders and seeker
 ```
 ./unity-ml-agents_hide-and-seek.x86_64 [game_params=<path/to/game_params_config.json>] [arena_params=<path/to/arena_params_config.json>]
 ```
-Note that checkpoints for inference cannot be loaded using game controller configs.
+Note that checkpoints for inference cannot be loaded using game controller JSON configs.
 
 ## Training
 To run training, use the `Scenes/Training` scene. You can adjust the number of training platforms by simply deleting or duplicating platform objects and stacking them vertically.
@@ -26,7 +26,7 @@ For testing the trained checkpoints, we provide a separate testing framework in 
 
 ## Environment Settings
 The following tables describe the parameters of `Game Controller` and `Map Generator` scripts attached to platform objects.
-The parameters can be either changed in the Unity inspector or overridden by passing a JSON config to the environment binary. Example configs are located in the `config` directory. The config files for hide and seek gamemode can be found in `config/default` and the config files for predator-prey gamemode can be found in `config/predator_prey`. The `config/borderless` shows an example of an arena that is not restricted by walls and penalizes agents for trying to go out of bounds instead.
+The parameters can be either changed in the Unity inspector or overridden by passing a JSON config to the environment binary. Example configs are located in the `config` directory. The config files for hide and seek gamemode can be found in (`config/default`)[/config/default/] and the config files for predator-prey gamemode can be found in (`config/predator_prey`)[/config/predator_prey/]. The (`config/borderless`)[/config/borderless/] shows an example of an arena that is not restricted by walls and penalizes agents for trying to go out of bounds instead.
 
 ### Game Parameters
 | **Parameter** | **Description** |
