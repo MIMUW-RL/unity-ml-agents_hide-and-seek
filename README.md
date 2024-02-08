@@ -1,5 +1,5 @@
 # ML-Agents Hide and Seek
-<gif here>
+![screencap](/screencap/screencap1_360p.gif)
 
 Hide and seek is an asymmetric cooperative-competitive environment for [Unity ML-Agents](https://github.com/Unity-Technologies/ml-agents) framework. The agents are divided into two teams: hiders and seekers. The goal of seekers is to maintain a line of sight on hiders, while the goal of hiders is to remain hidden throughout the game. The environment supports the predator-prey gameplay variant, where the goal of seekers is to capture hiders instead of simply having a line of sight on them. This repository was used for training and evaluation in the upcoming paper FCSP: Fictitious Co-Self-Play for Team-based Multi-agent Reinforcement Learning (preprint available on request).
 
