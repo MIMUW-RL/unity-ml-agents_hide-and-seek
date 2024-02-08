@@ -26,7 +26,7 @@ For testing the trained checkpoints, we provide a separate testing framework in 
 
 ## Environment Settings
 The following tables describe the parameters of `Game Controller` and `Map Generator` scripts attached to platform objects.
-The parameters can be either changed in the Unity inspector or overridden by passing a JSON config to the environment binary. Example configs are located in the `config` directory. The config files for hide and seek gamemode can be found in (default subdirectory)[/config/default/] and the config files for predator-prey gamemode can be found in (predator_prey subdirectory)[/config/predator_prey/]. The (borderless configs)[/config/borderless/] show an example of an arena that is not restricted by walls and penalizes agents for trying to go out of bounds instead.
+The parameters can be either changed in the Unity inspector or overridden by passing a JSON config to the environment binary. Example configs are located in the `config` directory. The config files for hide and seek gamemode can be found in (default subdirectory)[/config/default] and the config files for predator-prey gamemode can be found in (predator_prey subdirectory)[/config/predator_prey]. The (borderless configs)[/config/borderless] show an example of an arena that is not restricted by walls and penalizes agents for trying to go out of bounds instead.
 
 ### Game Parameters
 | **Parameter** | **Description** |
